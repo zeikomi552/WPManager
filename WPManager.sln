@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35527.113 d17.12
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPManager", "WPManager\WPManager.csproj", "{F24347FB-C0D1-4996-8108-F020CA556DF9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZkConverters", "ZkConverters\ZkConverters.csproj", "{CAF8F354-DDC2-4C0F-811F-22AD3365FC14}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F24347FB-C0D1-4996-8108-F020CA556DF9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F24347FB-C0D1-4996-8108-F020CA556DF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F24347FB-C0D1-4996-8108-F020CA556DF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F24347FB-C0D1-4996-8108-F020CA556DF9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CAF8F354-DDC2-4C0F-811F-22AD3365FC14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CAF8F354-DDC2-4C0F-811F-22AD3365FC14}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CAF8F354-DDC2-4C0F-811F-22AD3365FC14}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CAF8F354-DDC2-4C0F-811F-22AD3365FC14}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
