@@ -13,7 +13,7 @@ namespace WPManager.Common
         {
             var regionManager = containerProvider.Resolve<IRegionManager>();
             IRegion region = regionManager.Regions["ContentRegion"];
-            regionManager.RegisterViewWithRegion("ContentRegion", typeof(ucWordpressV));
+            regionManager.RegisterViewWithRegion("ContentRegion", typeof(ucGitHubV));
         }
 
         public void RegisterTypes(IContainerRegistry containerRegistry)

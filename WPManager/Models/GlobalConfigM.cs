@@ -27,14 +27,18 @@ namespace WPManager.Models
         /// </summary>
         public WPParameterM? WPConfig { get; set; }
 
+        public GitHubParameterM? GitHubConfig { get; set; }
+
         public void Load()
         {
             this.WPConfig = LoadConfig<WPParameterM>(this.ConfigDir, "WPConfig.conf");
+            this.GitHubConfig = LoadConfig<GitHubParameterM>(this.ConfigDir, "GitHubConfig.conf");
         }
 
         public void Save()
         {
             SaveConfig<WPParameterM>(this.ConfigDir, "WPConfig.conf", this.WPConfig!);
+            SaveConfig<GitHubParameterM>(this.ConfigDir, "GitHubConfig.conf", this.GitHubConfig!);
         }
 
 
