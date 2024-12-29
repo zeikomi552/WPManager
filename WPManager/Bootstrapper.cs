@@ -31,6 +31,7 @@ namespace WPManager
         protected override void ConfigureViewModelLocator()
         {
             base.ConfigureViewModelLocator();
+            ViewModelLocationProvider.Register<MainWindow, MainWindowViewModel>();
             ViewModelLocationProvider.Register<ucTopMenuV, ucTopMenuVViewModel>();
             ViewModelLocationProvider.Register<ucWordpressV, ucWordpressVViewModel>();
         }
