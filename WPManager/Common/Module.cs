@@ -12,8 +12,8 @@ namespace WPManager.Common
         public void OnInitialized(IContainerProvider containerProvider)
         {
             var regionManager = containerProvider.Resolve<IRegionManager>();
-            IRegion region = regionManager.Regions["ContentRegion"];
-            regionManager.RegisterViewWithRegion("ContentRegion", typeof(ucGitHubV));
+            regionManager.RegisterViewWithRegion("GitHubRegion", typeof(ucGitHubV));
+            regionManager.RegisterViewWithRegion("WordpressRegion", typeof(ucWordpressV));
         }
 
         public void RegisterTypes(IContainerRegistry containerRegistry)

@@ -11,6 +11,7 @@ namespace WPManager.Models
     {
         public string ConfigDir { get; }
         public WPParameterM? WPConfig { get; set; }
+        public GitHubParameterM? GitHubConfig { get; set; }
         public void Load();
 
         public void Save();

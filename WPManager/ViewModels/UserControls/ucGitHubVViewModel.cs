@@ -90,7 +90,7 @@ namespace WPManager.ViewModels.UserControls
 
         public ucGitHubVViewModel(IGlobalConfigM gConfig)
         {
-            //this.GitHubParameter = 
+            this.GitHubParameter = gConfig.GitHubConfig!;
         }
 
 
