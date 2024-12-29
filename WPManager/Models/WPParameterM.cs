@@ -88,7 +88,7 @@ namespace WPManager.Models
         #endregion
 
 
-        public async Task CreateOrUpdatePost(int postid, string title, string description, string excerpt, string content, string slug)
+        public async Task CreateOrUpdatePost(WPDataObjectM wpObject)
         {
             // Get valid WordPress Client
             WordPressClient wpClient = new WordPressClient(this.EndpointUri);
@@ -104,27 +104,27 @@ namespace WPManager.Models
             //Create and Set Post object
             var post = new Post
             {
-                Title = new Title(title),
-                Meta = new Description(description),
-                Excerpt = new Excerpt(excerpt),
-                Content = new Content(content),
+                Title = new Title(wpObject.Title),
+                Meta = new Description(wpObject.Description),
+                Excerpt = new Excerpt(wpObject.Excerpt),
+                Content = new Content(wpObject.Content),
                 //slug should be in lower case with hypen(-) separator 
-                Slug = slug
+                Slug = wpObject.Slug
             };
 
-            //// Assign one or more Categories, if any
-            //if (dataObj.Categories.Count > 0)
-            //{
-            //    post.Categories = dataObj.Categories;
-            //}
+            // Assign one or more Categories, if any
+            if (wpObject.Categories.Count > 0)
+            {
+                post.Categories = wpObject.Categories;
+            }
 
-            //// Assign one or more Tags, if any
-            //if (dataObj.Tags.Count > 0)
-            //{
-            //    post.Tags = dataObj.Tags;
-            //}
+            // Assign one or more Tags, if any
+            if (wpObject.Tags.Count > 0)
+            {
+                post.Tags = wpObject.Tags;
+            }
 
-            if (postid == 0)
+            if (wpObject.PostId == 0)
             {
                 // if you want to hide comment section
                 post.CommentStatus = OpenStatus.Closed;
@@ -140,7 +140,7 @@ namespace WPManager.Models
             else
             {
                 // check the status of post (draft or publish) and then update
-                if (IsPostDraftStatus(wpClient, postid))
+                if (IsPostDraftStatus(wpClient, wpObject.PostId))
                 {
                     post.Status = Status.Draft;
                 }

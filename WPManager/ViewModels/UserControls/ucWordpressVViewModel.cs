@@ -114,7 +114,17 @@ namespace WPManager.ViewModels.UserControls
         {
             Task.Run(() =>
             {
-                this.WPParameter!.CreateOrUpdatePost(0, "test", "test-description", "string-excerpt", "test-content", "test-aaa").Wait();
+                this.WPParameter!.CreateOrUpdatePost(
+                    new WPDataObjectM()
+                    {
+                        PostId = 0,
+                        Title = "test-title",
+                        Excerpt = "test-excerpt",
+                        Content = "test-content",
+                        Slug = "test-slug",
+                        Description = "test-Description",
+                    }
+                    ).Wait();
             });
             
         }

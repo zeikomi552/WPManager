@@ -16,7 +16,7 @@ namespace WPManager.Models
 
         public string UserName { get; set; }
 
-        public Task CreateOrUpdatePost(int postid, string title, string description, string excerpt, string content, string slug);
+        public Task CreateOrUpdatePost(WPDataObjectM wpObject);
 
         public Task<ObservableCollection<Post>> GetPost();
     }
