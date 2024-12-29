@@ -14,6 +14,7 @@ namespace WPManager.Common
             var regionManager = containerProvider.Resolve<IRegionManager>();
             regionManager.RegisterViewWithRegion("GitHubRegion", typeof(ucGitHubV));
             regionManager.RegisterViewWithRegion("WordpressRegion", typeof(ucWordpressV));
+            regionManager.RegisterViewWithRegion("CivitaiRegion", typeof(ucCivitaiV));
         }
 
         public void RegisterTypes(IContainerRegistry containerRegistry)
