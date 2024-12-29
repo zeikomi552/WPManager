@@ -25,6 +25,7 @@ namespace WPManager
         {
             // シングルトンクラスとして登録したい時
             containerRegistry.RegisterSingleton<IWPParameterM?, WPParameterM>();
+            containerRegistry.RegisterSingleton<IGlobalConfigM?, GlobalConfigM>();
             //containerRegistry.RegisterDialog<MediaPlayer, MediaPlayerViewModel>();
         }
 
