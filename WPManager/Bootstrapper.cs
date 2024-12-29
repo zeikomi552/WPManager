@@ -24,7 +24,7 @@ namespace WPManager
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             // シングルトンクラスとして登録したい時
-            containerRegistry.RegisterSingleton<IWPParameterM?, WPParameterM>();
+            //containerRegistry.RegisterSingleton<IWPParameterM?, WPParameterM>();
             containerRegistry.RegisterSingleton<IGlobalConfigM?, GlobalConfigM>();
             //containerRegistry.RegisterDialog<MediaPlayer, MediaPlayerViewModel>();
         }

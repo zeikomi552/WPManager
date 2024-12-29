@@ -44,10 +44,10 @@ namespace WPManager.ViewModels.UserControls
         /// <summary>
         /// コンストラクター
         /// </summary>
-        /// <param name="wpParameter"></param>
-        public ucWordpressVViewModel(IWPParameterM wpParameter)
+        /// <param name="IGlobalConfigM"></param>
+        public ucWordpressVViewModel(IGlobalConfigM gConfig)
         {
-            this.WPParameter = wpParameter;
+            this.WPParameter = gConfig.WPConfig;
         }
 
         #region ブログ記事一覧
@@ -126,7 +126,6 @@ namespace WPManager.ViewModels.UserControls
                     }
                     ).Wait();
             });
-            
         }
 
     }

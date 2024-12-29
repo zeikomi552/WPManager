@@ -11,31 +11,6 @@ namespace WPManager.ViewModels
 {
     public class MainWindowViewModel : BindableBase
     {
-        #region Wordpress接続用パラメーター
-        /// <summary>
-        /// Wordpress接続用パラメーター
-        /// </summary>
-        IWPParameterM? _WPParameter;
-        /// <summary>
-        /// Wordpress接続用パラメーター
-        /// </summary>
-        public IWPParameterM? WPParameter
-        {
-            get
-            {
-                return _WPParameter;
-            }
-            set
-            {
-                if (_WPParameter == null || !_WPParameter.Equals(value))
-                {
-                    _WPParameter = value;
-                    RaisePropertyChanged("WPParameter");
-                }
-            }
-        }
-        #endregion
-
         #region コンフィグデータ
         /// <summary>
         /// コンフィグデータ
@@ -61,13 +36,22 @@ namespace WPManager.ViewModels
         }
         #endregion
 
-
-
-        public MainWindowViewModel(IWPParameterM wpParameter, IGlobalConfigM gConfig)
+        public MainWindowViewModel(IGlobalConfigM gConfig)
         {
             this.GlobalConfig = gConfig;
-            this.WPParameter = wpParameter;
             this.GlobalConfig.Load();
+        }
+
+        public void Closing()
+        {
+            try
+            {
+                this.GlobalConfig!.Save();
+            }
+            catch
+            {
+
+            }
         }
 
     }
