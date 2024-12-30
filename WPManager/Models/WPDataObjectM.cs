@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WPManager.Models.Civitai.Models;
 
 namespace WPManager.Models
 {
@@ -45,6 +46,13 @@ namespace WPManager.Models
         /// タグリスト
         /// </summary>
         public List<int> Tags { get; set; } = new List<int>();
+
+
+        public void SetRequest(CvsModelM model)
+        {
+
+        }
+
 
     }
 }
