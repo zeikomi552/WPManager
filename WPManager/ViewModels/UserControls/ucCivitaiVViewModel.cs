@@ -233,24 +233,24 @@ namespace WPManager.ViewModels.UserControls
                 {
                     case Models.Civitai.Enums.ModelTypeEnum.Checkpoint:
                         {
-                            title = ($"CIVITAI人気モデル速報！{period}ダウンロード数ランキング");
+                            title = ($"{DateTime.Today.Year}年版 CIVITAI人気モデル速報！{period}ダウンロード数ランキング");
                             break;
                         }
                     case Models.Civitai.Enums.ModelTypeEnum.LORA:
                         {
-                            title = ($"CIVITAI人気{Models.Civitai.Enums.ModelTypeEnum.LORA.ToString()}速報！{period}ダウンロード数ランキング");
+                            title = ($"{DateTime.Today.Year}年版 CIVITAI人気{Models.Civitai.Enums.ModelTypeEnum.LORA.ToString()}速報！{period}ダウンロード数ランキング");
                             break;
                         }
                     default:
                         {
-                            title = ($"CIVITAI人気{this.SearchCondition.Types.ToString()}速報！{period}ダウンロード数ランキング");
+                            title = ($"{DateTime.Today.Year}年版 CIVITAI人気{this.SearchCondition.Types.ToString()}速報！{period}ダウンロード数ランキング");
                             break;
                         }
                 }
             }
             else
             {
-                title = ($"CIVITAI人気ダウンロード速報！{period}ダウンロード数ランキング");
+                title = ($"{DateTime.Today.Year}年版 CIVITAI人気ダウンロード速報！{period}ダウンロード数ランキング");
             }
 
             return title;
