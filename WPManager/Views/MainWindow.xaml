@@ -16,10 +16,8 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <ContentControl Margin="5" prism:RegionManager.RegionName="WordpressRegion"/>
-        <ContentControl Margin="5" prism:RegionManager.RegionName="GitHubRegion" Grid.Column="1"/>
-        <ContentControl Margin="5" prism:RegionManager.RegionName="CivitaiRegion" Grid.Column="2"/>
+        <ContentControl Margin="5" prism:RegionManager.RegionName="GitHubRegion"/>
+        <ContentControl Margin="5" prism:RegionManager.RegionName="CivitaiRegion" Grid.Column="1"/>
     </Grid>
 </Window>

@@ -140,6 +140,7 @@ namespace WPManager.Models
             else
             {
                 // check the status of post (draft or publish) and then update
+                post.Id = wpObject.PostId;
                 if (IsPostDraftStatus(wpClient, wpObject.PostId))
                 {
                     post.Status = Status.Draft;
