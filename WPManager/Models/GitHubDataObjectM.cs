@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Octokit;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -58,6 +59,30 @@ namespace WPManager.Models
         }
         #endregion
 
+        #region 選択している言語
+        /// <summary>
+        /// 選択している言語
+        /// </summary>
+        Language? _SelectedLanguage = null;
+        /// <summary>
+        /// 選択している言語
+        /// </summary>
+        public Language? SelectedLanguage
+        {
+            get
+            {
+                return _SelectedLanguage;
+            }
+            set
+            {
+                if (!_SelectedLanguage.Equals(value))
+                {
+                    _SelectedLanguage = value;
+                    RaisePropertyChanged("SelectedLanguage");
+                }
+            }
+        }
+        #endregion
 
     }
 }

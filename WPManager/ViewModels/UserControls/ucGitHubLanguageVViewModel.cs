@@ -14,11 +14,11 @@ namespace WPManager.ViewModels.UserControls
         /// <summary>
         /// ブログマネージャー
         /// </summary>
-        GitHubBlogManagerM _BlogManager = new GitHubBlogManagerM();
+        GitHubBolgLanguageManagerM _BlogManager = new GitHubBolgLanguageManagerM();
         /// <summary>
         /// ブログマネージャー
         /// </summary>
-        public GitHubBlogManagerM BlogManager
+        public GitHubBolgLanguageManagerM BlogManager
         {
             get
             {

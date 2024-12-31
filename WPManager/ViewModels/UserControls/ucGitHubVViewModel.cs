@@ -56,7 +56,7 @@ namespace WPManager.ViewModels.UserControls
         /// </summary>
         public void Search()
         {
-            this.BlogManager.Search(0);
+            this.BlogManager.Search();
         }
         #endregion
 
@@ -68,7 +68,7 @@ namespace WPManager.ViewModels.UserControls
         {
             try
             {
-                this.BlogManager.SelectedLanguage = null;
+                this.BlogManager.SearchCondition.SelectedLanguage = null;
             }
             catch
             {
