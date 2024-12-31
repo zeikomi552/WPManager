@@ -1,18 +1,14 @@
-﻿using Markdig;
-using Octokit;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WPManager.Models;
-using WPManager.Common.Extensions;
 using WPManager.Models.GitHub;
 
 namespace WPManager.ViewModels.UserControls
 {
-    public class ucGitHubVViewModel : GitHubBaseViewModel
+    public class ucGitHubLanguageVViewModel : GitHubBaseViewModel
     {
         #region ブログマネージャー
         /// <summary>
@@ -39,41 +35,20 @@ namespace WPManager.ViewModels.UserControls
         }
         #endregion
 
-        #region コンストラクタ
-        /// <summary>
-        /// コンストラクタ
-        /// </summary>
-        /// <param name="gConfig"></param>
-        public ucGitHubVViewModel(IGlobalConfigM gConfig) : base(gConfig)
+        public ucGitHubLanguageVViewModel(IGlobalConfigM gConfig) : base(gConfig)
         {
             this.BlogManager.GitHubParameter = gConfig.GitHubConfig!;
         }
-        #endregion
+
 
         #region 検索処理
         /// <summary>
         /// 検索処理
         /// </summary>
-        public void Search()
+        public async void Search()
         {
-            this.BlogManager.Search(0);
-        }
-        #endregion
-
-        #region 言語選択の解除処理
-        /// <summary>
-        /// 言語選択の解除処理
-        /// </summary>
-        public void LanguageClear()
-        {
-            try
-            {
-                this.BlogManager.SelectedLanguage = null;
-            }
-            catch
-            {
-
-            }
+            this.BlogManager.Article.Content = await this.BlogManager.SearchLanguage(10);
+            RaisePropertyChanged("BlogManager");
         }
         #endregion
 

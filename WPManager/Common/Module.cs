@@ -13,6 +13,7 @@ namespace WPManager.Common
         {
             var regionManager = containerProvider.Resolve<IRegionManager>();
             regionManager.RegisterViewWithRegion("GitHubRegion", typeof(ucGitHubV));
+            regionManager.RegisterViewWithRegion("GitHubLanguageRegion", typeof(ucGitHubLanguageV));
             regionManager.RegisterViewWithRegion("WordpressRegion", typeof(ucWordpressV));
             regionManager.RegisterViewWithRegion("CivitaiRegion", typeof(ucCivitaiV));
         }

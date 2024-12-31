@@ -17,6 +17,9 @@
             <TabItem Header="GitHub">
                 <ContentControl Margin="5" prism:RegionManager.RegionName="GitHubRegion"/>
             </TabItem>
+            <TabItem Header="GitHub(Language)">
+                <ContentControl Margin="5" prism:RegionManager.RegionName="GitHubLanguageRegion"/>
+            </TabItem>
             <TabItem Header="Civitai">
                 <ContentControl Margin="5" prism:RegionManager.RegionName="CivitaiRegion"/>
             </TabItem>
