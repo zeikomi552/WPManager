@@ -8,7 +8,7 @@ using WPManager.Models.Civitai.Models;
 
 namespace WPManager.Models.Civitai
 {
-    public class CivitaiBlogManagerM : BindableBase
+    public class CivitaiBlogManagerM : BaseBlogManagerM
     {
         #region エンドポイント
         /// <summary>
@@ -43,30 +43,6 @@ namespace WPManager.Models.Civitai
         }
         #endregion
 
-        #region ブログ記事
-        /// <summary>
-        /// ブログ記事
-        /// </summary>
-        WPDataObjectM _Article = new WPDataObjectM();
-        /// <summary>
-        /// ブログ記事
-        /// </summary>
-        public WPDataObjectM Article
-        {
-            get
-            {
-                return _Article;
-            }
-            set
-            {
-                if (_Article == null || !_Article.Equals(value))
-                {
-                    _Article = value;
-                    RaisePropertyChanged("Article");
-                }
-            }
-        }
-        #endregion
 
         #region 検索条件
         /// <summary>
@@ -102,20 +78,6 @@ namespace WPManager.Models.Civitai
             var client = new CivitaiClient(EndPoint);
             this.SearchResults = await client.ModelSearch(this.SearchCondition.RequestQuery);
             SetArticleInfo();
-        }
-        #endregion
-
-        #region 記事のポスト処理
-        /// <summary>
-        /// 記事のポスト処理
-        /// </summary>
-        /// <param name="wpParam"></param>
-        public void Post(IWPParameterM wpParam)
-        {
-            Task.Run(() =>
-            {
-                wpParam.CreateOrUpdatePost(this.Article).Wait();
-            });
         }
         #endregion
 

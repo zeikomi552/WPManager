@@ -58,11 +58,46 @@
         </StackPanel>
         <Grid Grid.Row="1" Margin="5">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="299*"/>
-                <ColumnDefinition Width="96*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <DataGrid IsReadOnly="True" ItemsSource="{Binding SearchResults.Items}" SelectedItem="{Binding SelectedBlogArticle}"/>
-            <TextBox Grid.Column="1" Text="{Binding Article}" />
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid>
+                    <WrapPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                            <TextBlock Margin="5" VerticalAlignment="Center" Text="Id(0は新規):"/>
+                            <TextBox Margin="5" Width="100" Text="{Binding BlogManager.Article.PostId}"/>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                            <TextBlock Width="40" TextAlignment="Right" VerticalAlignment="Center" Margin="5" Text="タイトル"/>
+                            <TextBlock VerticalAlignment="Center" Margin="5" Text=":"/>
+                            <TextBox Width="200" VerticalAlignment="Center" Margin="5" Text="{Binding BlogManager.Article.Title}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                            <TextBlock Width="40" TextAlignment="Right" VerticalAlignment="Center" Margin="5" Text="スラッグ"/>
+                            <TextBlock VerticalAlignment="Center" Margin="5" Text=":"/>
+                            <TextBox Width="100" VerticalAlignment="Center" Margin="5" Text="{Binding BlogManager.Article.Slug}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                            <TextBlock Width="40" TextAlignment="Right" VerticalAlignment="Center" Margin="5" Text="抜粋"/>
+                            <TextBlock VerticalAlignment="Center" Margin="5" Text=":"/>
+                            <TextBox AcceptsReturn="True" Width="300" Height="30" VerticalAlignment="Center" Margin="5" Text="{Binding BlogManager.Article.Excerpt}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                            <TextBlock Width="40" TextAlignment="Right" VerticalAlignment="Center" Margin="5" Text="詳細"/>
+                            <TextBlock VerticalAlignment="Center" Margin="5" Text=":"/>
+                            <TextBox AcceptsReturn="True" Width="300" Height="30" VerticalAlignment="Center" Margin="5" Text="{Binding BlogManager.Article.Description}"/>
+                        </StackPanel>
+                    </WrapPanel>
+                </Grid>
+                <TextBox Margin="5" Grid.Row="1" Text="{Binding Article}" />
+            </Grid>
         </Grid>
     </Grid>
 </UserControl>

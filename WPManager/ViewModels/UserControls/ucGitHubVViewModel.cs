@@ -8,11 +8,37 @@ using System.Text;
 using System.Threading.Tasks;
 using WPManager.Models;
 using WPManager.Common.Extensions;
+using WPManager.Models.GitHub;
 
 namespace WPManager.ViewModels.UserControls
 {
     public class ucGitHubVViewModel : BindableBase
     {
+        #region Wordpress接続用パラメーター
+        /// <summary>
+        /// Wordpress接続用パラメーター
+        /// </summary>
+        IWPParameterM? _WPParameter;
+        /// <summary>
+        /// Wordpress接続用パラメーター
+        /// </summary>
+        public IWPParameterM? WPParameter
+        {
+            get
+            {
+                return _WPParameter;
+            }
+            set
+            {
+                if (_WPParameter == null || !_WPParameter.Equals(value))
+                {
+                    _WPParameter = value;
+                    RaisePropertyChanged("WPParameter");
+                }
+            }
+        }
+        #endregion
+
         #region GitHub接続用パラメーター
         /// <summary>
         /// GitHub接続用パラメーター
@@ -37,164 +63,51 @@ namespace WPManager.ViewModels.UserControls
             }
         }
         #endregion
-        #region データオブジェクト
+
+        #region ブログマネージャー
         /// <summary>
-        /// データオブジェクト
+        /// ブログマネージャー
         /// </summary>
-        GitHubDataObjectM _DataObject = new GitHubDataObjectM();
+        GitHubBlogManagerM _BlogManager = new GitHubBlogManagerM();
         /// <summary>
-        /// データオブジェクト
+        /// ブログマネージャー
         /// </summary>
-        public GitHubDataObjectM DataObject
+        public GitHubBlogManagerM BlogManager
         {
             get
             {
-                return _DataObject;
+                return _BlogManager;
             }
             set
             {
-                if (_DataObject == null || !_DataObject.Equals(value))
+                if (_BlogManager == null || !_BlogManager.Equals(value))
                 {
-                    _DataObject = value;
-                    RaisePropertyChanged("DataObject");
+                    _BlogManager = value;
+                    RaisePropertyChanged("BlogManager");
                 }
             }
         }
         #endregion
 
-        #region 検索結果
+        #region コンストラクタ
         /// <summary>
-        /// 検索結果
+        /// コンストラクタ
         /// </summary>
-        SearchRepositoryResult? _SearchResults = new SearchRepositoryResult();
-        /// <summary>
-        /// 検索結果
-        /// </summary>
-        public SearchRepositoryResult? SearchResults
-        {
-            get
-            {
-                return _SearchResults;
-            }
-            set
-            {
-                if (_SearchResults == null || !_SearchResults.Equals(value))
-                {
-                    _SearchResults = value;
-                    RaisePropertyChanged("SearchResults");
-                }
-            }
-        }
-        #endregion
-
-
-        #region 選択している言語
-        /// <summary>
-        /// 選択している言語
-        /// </summary>
-        Language? _SelectedLanguage = null;
-        /// <summary>
-        /// 選択している言語
-        /// </summary>
-        public Language? SelectedLanguage
-        {
-            get
-            {
-                return _SelectedLanguage;
-            }
-            set
-            {
-                if (!_SelectedLanguage.Equals(value))
-                {
-                    _SelectedLanguage = value;
-                    RaisePropertyChanged("SelectedLanguage");
-                }
-            }
-        }
-        #endregion
-
-        #region 記事
-        /// <summary>
-        /// 記事
-        /// </summary>
-        string _Article = string.Empty;
-        /// <summary>
-        /// 記事
-        /// </summary>
-        public string Article
-        {
-            get
-            {
-                return _Article;
-            }
-            set
-            {
-                if (_Article == null || !_Article.Equals(value))
-                {
-                    _Article = value;
-                    RaisePropertyChanged("Article");
-                }
-            }
-        }
-        #endregion
-
-
-
+        /// <param name="gConfig"></param>
         public ucGitHubVViewModel(IGlobalConfigM gConfig)
         {
-            this.GitHubParameter = gConfig.GitHubConfig!;
+            this.WPParameter = gConfig.WPConfig;
+            this.BlogManager.GitHubParameter = gConfig.GitHubConfig!;
         }
+        #endregion
 
-
-        public void Search()
-        {
-            Search(0);
-        }
         #region 検索処理
         /// <summary>
         /// 検索処理
         /// </summary>
-        /// <param name="page">検索するページ</param>
-        private async void Search(int page)
+        public void Search()
         {
-            // GitHub Clientの作成
-            var client = new GitHubClient(new ProductHeaderValue(this.GitHubParameter.ProductName));
-
-            // トークンの取得
-            var tokenAuth = new Credentials(this.GitHubParameter.AccessToken);
-            client.Credentials = tokenAuth;
-
-            SearchRepositoriesRequest request = new SearchRepositoriesRequest();
-#pragma warning disable CS0618 // 型またはメンバーが旧型式です
-
-            // 値を持っているかどうかのチェック
-            request.Created = new DateRange(this.DataObject.SearchFrom, this.DataObject.SearchTo);
-
-            // スターの数
-            request.Stars = new Octokit.Range(1, int.MaxValue);
-
-            // 読み込むページ
-            request.Page = page;
-
-            // スターの数でソート
-            request.SortField = RepoSearchSort.Stars;
-
-            if (this.SelectedLanguage.HasValue)
-            {
-                request.Language = this.SelectedLanguage;
-            }
-
-            // 降順でソート
-            request.Order = SortDirection.Descending;
-#pragma warning restore CS0618 // 型またはメンバーが旧型式です
-
-            this.SearchResults = await client.Search.SearchRepo(request);
-
-            // nullチェック
-            if (this.SearchResults != null)
-            {
-                this.Article = GetArticle(this.DataObject.SearchFrom, this.DataObject.SearchTo, this.SelectedLanguage, this.SearchResults!);
-            }
+            this.BlogManager.Search(0);
         }
         #endregion
 
@@ -204,56 +117,32 @@ namespace WPManager.ViewModels.UserControls
         /// </summary>
         public void LanguageClear()
         {
-            this.SelectedLanguage = null;
+            try
+            {
+                this.BlogManager.SelectedLanguage = null;
+            }
+            catch
+            {
+
+            }
         }
         #endregion
 
+        #region 記事投稿処理
         /// <summary>
-        /// 記事
+        /// 記事投稿処理
         /// </summary>
-        /// <returns>記事</returns>
-        public static string GetArticle(DateTime startDt, DateTime endDt, Language? search_language, SearchRepositoryResult repogitories)
+        public void Post()
         {
-            StringBuilder text = new StringBuilder();
-            text.AppendLine($"## GitHubサーベイ 調査日{DateTime.Today.ToString("yyyy/MM/dd")}");
-
-            text.AppendLine($"### 検索条件");
-
-            text.AppendLine($"- リポジトリ作成日 {startDt.ToString("yyyy/MM/dd")} - {endDt.ToString("yyyy/MM/dd")}");
-
-            // 言語条件
-            if (search_language.HasValue)
+            try
             {
-                text.AppendLine($"- 開発言語 {search_language}");
+                this.BlogManager.Post(this.WPParameter!);
             }
-
-            text.AppendLine($"- ソート順：スター獲得数順");
-            text.AppendLine();
-
-            text.AppendLine($"### 検索結果");
-            text.AppendLine($"|スター(順位)<br>使用言語|リポジトリ名<br>説明|検索|");
-            text.AppendLine($"|:-:|---|:-:|");
-            int rank = 1;
-            foreach (var repo in repogitories.Items)
+            catch
             {
-                string description = repo.Description.EmptyToText("-").CutText(50).Replace("|", "\\/");
-                string language = repo.Language.EmptyToText("-").CutText(20);
 
-                string homepage_url = !string.IsNullOrWhiteSpace(repo.Homepage) ? $" [[Home Page]({repo.Homepage})]" : string.Empty;
-
-                // 行情報の作成
-                text.AppendLine($"|<center>{repo.StargazersCount}<br>({rank++}位)<br>{language}</center>|" +
-                    $"[{repo.FullName}]({repo.HtmlUrl}){homepage_url}<br>{description}|" +
-                    $"[[google](https://www.google.com/search?q={repo.Name})] " +
-                    $"[[Qiita](https://qiita.com/search?q={repo.Name})]|");
             }
-
-            //convert Mark down to html and set to mdContents
-            Markdig.MarkdownPipeline markdownPipeline = new MarkdownPipelineBuilder().UsePipeTables().Build();
-
-            string mdContents = Markdown.ToHtml(text.ToString(), markdownPipeline);
-
-            return mdContents;
         }
+        #endregion
     }
 }
