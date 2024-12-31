@@ -86,6 +86,31 @@ namespace WPManager.ViewModels.UserControls
         #endregion
 
 
+        #region 選択している言語
+        /// <summary>
+        /// 選択している言語
+        /// </summary>
+        Language? _SelectedLanguage = null;
+        /// <summary>
+        /// 選択している言語
+        /// </summary>
+        public Language? SelectedLanguage
+        {
+            get
+            {
+                return _SelectedLanguage;
+            }
+            set
+            {
+                if (!_SelectedLanguage.Equals(value))
+                {
+                    _SelectedLanguage = value;
+                    RaisePropertyChanged("SelectedLanguage");
+                }
+            }
+        }
+        #endregion
+
 
 
         public ucGitHubVViewModel(IGlobalConfigM gConfig)
@@ -127,7 +152,10 @@ namespace WPManager.ViewModels.UserControls
             // スターの数でソート
             request.SortField = RepoSearchSort.Stars;
 
-            //request.Language = this.LanguageList.SelectedItem.UseLanguage;
+            if (this.SelectedLanguage.HasValue)
+            {
+                request.Language = this.SelectedLanguage;
+            }
 
             // 降順でソート
             request.Order = SortDirection.Descending;
@@ -139,5 +167,10 @@ namespace WPManager.ViewModels.UserControls
             //this.Article = RepositorySearchResultM.GetArticle(this.SearchDateRange, request.Language, this.SearchResult);
         }
         #endregion
+
+        public void LanguageClear()
+        {
+            this.SelectedLanguage = null;
+        }
     }
 }
