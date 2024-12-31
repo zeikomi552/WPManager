@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WPManager.Common.Extensions;
+using WPManager.Models.Civitai.Enums;
 
 namespace WPManager.Models.GitHub
 {
@@ -154,7 +155,8 @@ namespace WPManager.Models.GitHub
             // nullチェック
             if (this.SearchResults != null)
             {
-                this.Article.Content = GetArticle(this.SearchCondition.SearchFrom, this.SearchCondition.SearchTo, this.SelectedLanguage, this.SearchResults!);
+                // 記事に関する各要素をセット
+                SetArticleInfo();
             }
         }
         #endregion
@@ -167,7 +169,7 @@ namespace WPManager.Models.GitHub
         public static string GetArticle(DateTime startDt, DateTime endDt, Language? search_language, SearchRepositoryResult repogitories)
         {
             StringBuilder text = new StringBuilder();
-            text.AppendLine($"## GitHubサーベイ 調査日{DateTime.Today.ToString("yyyy/MM/dd")}");
+            text.AppendLine($"## GitHub調査日{DateTime.Today.ToString("yyyy/MM/dd")}");
 
             text.AppendLine($"### 検索条件");
 
@@ -205,7 +207,85 @@ namespace WPManager.Models.GitHub
 
             string mdContents = Markdown.ToHtml(text.ToString(), markdownPipeline);
 
-            return mdContents;
+            return mdContents.Replace("<table>", "<table border=\"1\">");
+        }
+        #endregion
+
+        #region ブログの記事情報をセットする
+        /// <summary>
+        /// ブログの記事情報をセットする
+        /// </summary>
+        private void SetArticleInfo()
+        {
+            this.Article.Title = CreateTitle();
+            this.Article.Slug = CreateSlug();
+            this.Article.Content = CreateArticle();
+            this.Article.Description = CreateTitle();
+            this.Article.Excerpt = CreateTitle();
+            RaisePropertyChanged("Article");
+        }
+        #endregion
+
+        public string CreateArticle()
+        {
+            return GetArticle(this.SearchCondition.SearchFrom,
+                this.SearchCondition.SearchTo, this.SelectedLanguage, this.SearchResults!);
+        }
+
+        #region スラッグを作成する
+        /// <summary>
+        /// スラッグを作成する
+        /// </summary>
+        /// <returns>スラッグ</returns>
+        private string CreateSlug()
+        {
+            string period = this.SearchCondition.SearchFrom.ToString("yyyyMMdd") + "-" + this.SearchCondition.SearchTo.ToString("yyyyMMdd");
+            string lang = this.SelectedLanguage.HasValue ? this.SelectedLanguage.Value.ToString() : "all";
+
+            return ($"{period}-githab-{lang}");
+        }
+        #endregion
+
+
+        #region タイトルの作成処理
+        /// <summary>
+        /// タイトルの作成処理
+        /// </summary>
+        /// <returns>タイトル</returns>
+        private string CreateTitle()
+        {
+            string title = string.Empty;
+            string period = this.SearchCondition.SearchFrom.ToString("yyyy/MM/dd") + "-" + this.SearchCondition.SearchTo.ToString("yyyy/MM/dd");
+            string lang = this.SelectedLanguage.HasValue ? this.SelectedLanguage.Value.ToString() : "";
+            string text = "年版 GitHub人気リポジトリ速報！スター獲得数ランキング";
+
+            if (this.SelectedLanguage.HasValue)
+            {
+                switch (this.SelectedLanguage)
+                {
+                    case Language.CSharp:
+                        {
+                            title = ($"{this.SearchCondition.SearchFrom.Year}{text}(C#)");
+                            break;
+                        }
+                    case Language.CPlusPlus:
+                        {
+                            title = ($"{this.SearchCondition.SearchFrom.Year}{text}(C++)");
+                            break;
+                        }
+                    default:
+                        {
+                            title = ($"{this.SearchCondition.SearchFrom.Year}{text}({this.SelectedLanguage.Value})");
+                            break;
+                        }
+                }
+            }
+            else
+            {
+                title = ($"{this.SearchCondition.SearchFrom.Year}{text}");
+            }
+
+            return title;
         }
         #endregion
     }

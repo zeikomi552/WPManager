@@ -19,24 +19,24 @@
         <StackPanel>
             <StackPanel Orientation="Horizontal">
                 <TextBlock Margin="5" VerticalAlignment="Center" Text="製品名(任意)"/>
-                <TextBox Margin="5" VerticalAlignment="Center" Width="200" Text="{Binding GitHubParameter.ProductName}"/>
+                <TextBox Margin="5" VerticalAlignment="Center" Width="200" Text="{Binding BlogManager.GitHubParameter.ProductName}"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <TextBlock Margin="5" VerticalAlignment="Center" Text="アクセストークン"/>
-                <TextBox Margin="5" VerticalAlignment="Center" Width="200" Text="{Binding GitHubParameter.AccessToken}"/>
+                <TextBox Margin="5" VerticalAlignment="Center" Width="200" Text="{Binding BlogManager.GitHubParameter.AccessToken}"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <TextBlock Margin="5" VerticalAlignment="Center" Text="日付範囲"/>
-                <DatePicker Margin="5" VerticalAlignment="Center" SelectedDate="{Binding DataObject.SearchFrom}"/>
+                <DatePicker Margin="5" VerticalAlignment="Center" SelectedDate="{Binding BlogManager.SearchCondition.SearchFrom}"/>
                 <TextBlock Margin="5" VerticalAlignment="Center" Text=" - "/>
-                <DatePicker Margin="5" VerticalAlignment="Center" SelectedDate="{Binding DataObject.SearchTo}"/>
+                <DatePicker Margin="5" VerticalAlignment="Center" SelectedDate="{Binding BlogManager.SearchCondition.SearchTo}"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <TextBlock Width="85" TextAlignment="Right" Margin="5" VerticalAlignment="Center" Text="開発言語"/>
                 <TextBlock Margin="5" VerticalAlignment="Center" Text=":"/>
                 <ComboBox Width="100" ItemsSource="{Binding Mode=OneWay, Source={my:Enumeration {x:Type enum:Language}}}"
                                               DisplayMemberPath="Description" SelectedValuePath="Value"
-                                              SelectedValue="{Binding SelectedLanguage}"/>
+                                              SelectedValue="{Binding BlogManager.SelectedLanguage}"/>
                 <Button Margin="5" Content="クリア">
                     <b:Interaction.Triggers>
                         <b:EventTrigger EventName="Click">
@@ -53,6 +53,13 @@
                         </b:EventTrigger>
                     </b:Interaction.Triggers>
                 </Button>
+                <Button Margin="5" Width="100" Content="一覧投稿">
+                    <b:Interaction.Triggers>
+                        <b:EventTrigger EventName="Click">
+                            <b:CallMethodAction TargetObject="{Binding}" MethodName="Post"/>
+                        </b:EventTrigger>
+                    </b:Interaction.Triggers>
+                </Button>
 
             </StackPanel>
         </StackPanel>
@@ -61,7 +68,7 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <DataGrid IsReadOnly="True" ItemsSource="{Binding SearchResults.Items}" SelectedItem="{Binding SelectedBlogArticle}"/>
+            <DataGrid IsReadOnly="True" ItemsSource="{Binding BlogManager.SearchResults.Items}"/>
             <Grid Grid.Column="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
@@ -96,7 +103,7 @@
                         </StackPanel>
                     </WrapPanel>
                 </Grid>
-                <TextBox Margin="5" Grid.Row="1" Text="{Binding Article}" />
+                <TextBox Margin="5" Grid.Row="1" Text="{Binding BlogManager.Article.Content}" />
             </Grid>
         </Grid>
     </Grid>

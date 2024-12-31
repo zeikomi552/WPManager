@@ -13,11 +13,13 @@
         </b:EventTrigger>
     </b:Interaction.Triggers>
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        <ContentControl Margin="5" prism:RegionManager.RegionName="GitHubRegion"/>
-        <ContentControl Margin="5" prism:RegionManager.RegionName="CivitaiRegion" Grid.Column="1"/>
+        <TabControl>
+            <TabItem Header="GitHub">
+                <ContentControl Margin="5" prism:RegionManager.RegionName="GitHubRegion"/>
+            </TabItem>
+            <TabItem Header="Civitai">
+                <ContentControl Margin="5" prism:RegionManager.RegionName="CivitaiRegion" Grid.Column="1"/>
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>
