@@ -54,7 +54,7 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <DataGrid IsReadOnly="True" ItemsSource="{Binding BlogManager.SearchResults.Items}"/>
+            <DataGrid IsReadOnly="True" ItemsSource="{Binding BlogManager.SearchResults}"/>
             <Grid Grid.Column="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>

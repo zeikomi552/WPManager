@@ -87,6 +87,27 @@ namespace WPManager.Models.GitHub
         }
         #endregion
 
+        #region 指定したページ数まで検索を実行する
+        /// <summary>
+        /// 指定したページ数まで検索を実行する
+        /// 1から始まる
+        /// </summary>
+        /// <param name="pagemax">ページ最大値</param>
+        /// <returns>リポジトリデータ</returns>
+        protected async Task<List<Repository>> SearchPageMax(int pagemax)
+        {
+            List<Repository> list = new List<Repository>();
+            for (int page = 1; page <= pagemax; page++)
+            {
+                var result = await Search(page);
+
+                list.AddRange(result.Items.ToList<Repository>());
+            }
+
+            return list;
+        }
+        #endregion
+
         #region 検索処理
         /// <summary>
         /// 検索処理
@@ -130,7 +151,6 @@ namespace WPManager.Models.GitHub
         }
         #endregion
 
-
         #region ブログの記事情報をセットする
         /// <summary>
         /// ブログの記事情報をセットする
@@ -156,7 +176,6 @@ namespace WPManager.Models.GitHub
             return string.Empty;
         }
         #endregion
-
 
         #region スラッグを作成する
         /// <summary>
@@ -188,7 +207,7 @@ namespace WPManager.Models.GitHub
         /// <returns>詳細</returns>
         protected virtual string GetDescription()
         {
-            return GetTitle();
+            return string.Empty;
         }
         #endregion
 
@@ -199,7 +218,7 @@ namespace WPManager.Models.GitHub
         /// <returns>要約</returns>
         protected virtual string GetExcerpt()
         {
-            return GetTitle();
+            return string.Empty;
 
         }
         #endregion

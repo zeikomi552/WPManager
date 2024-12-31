@@ -45,9 +45,9 @@ namespace WPManager.ViewModels.UserControls
         /// <summary>
         /// 検索処理
         /// </summary>
-        public async void Search()
+        public void Search()
         {
-            this.BlogManager.Article.Content = await this.BlogManager.SearchLanguage(10);
+            this.BlogManager.Search();
             RaisePropertyChanged("BlogManager");
         }
         #endregion

@@ -1,113 +1,58 @@
-﻿using Octokit;
+﻿using Markdig;
+using Octokit;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WPManager.Common.Extensions;
 
 namespace WPManager.Models.GitHub
 {
-    public class GitHubBolgLanguageManagerM : BaseBlogManagerM
+    public class GitHubBolgLanguageManagerM : GitHubBlogManagerBaseM
     {
-        #region GitHub接続用パラメーター
-        /// <summary>
-        /// GitHub接続用パラメーター
-        /// </summary>
-        GitHubParameterM _GitHubParameter = new GitHubParameterM();
-        /// <summary>
-        /// GitHub接続用パラメーター
-        /// </summary>
-        public GitHubParameterM GitHubParameter
-        {
-            get
-            {
-                return _GitHubParameter;
-            }
-            set
-            {
-                if (_GitHubParameter == null || !_GitHubParameter.Equals(value))
-                {
-                    _GitHubParameter = value;
-                    RaisePropertyChanged("GitHubParameter");
-                }
-            }
-        }
-        #endregion
-
-        #region データオブジェクト
-        /// <summary>
-        /// データオブジェクト
-        /// </summary>
-        GitHubDataObjectM _SearchCondition = new GitHubDataObjectM();
-        /// <summary>
-        /// データオブジェクト
-        /// </summary>
-        public GitHubDataObjectM SearchCondition
-        {
-            get
-            {
-                return _SearchCondition;
-            }
-            set
-            {
-                if (_SearchCondition == null || !_SearchCondition.Equals(value))
-                {
-                    _SearchCondition = value;
-                    RaisePropertyChanged("SearchCondition");
-                }
-            }
-        }
-        #endregion
-
-        List<Repository> _ResultList = new List<Repository>();
-
-
-
         #region 検索処理
         /// <summary>
         /// 検索処理
         /// </summary>
-        /// <param name="page">検索するページ</param>
-        public async Task<string> SearchLanguage(int max)
+        public async void Search()
         {
-            for (int i = 1; i <= max; i++)
+            var result = await SearchPageMax(10);   // 1ページ目の検索処理
+
+            this.SearchResults = new ObservableCollection<Repository>(result);
+
+            // nullチェック
+            if (this.SearchResults != null)
             {
-                // GitHub Clientの作成
-                var client = new GitHubClient(new ProductHeaderValue(this.GitHubParameter.ProductName));
-
-                // トークンの取得
-                var tokenAuth = new Credentials(this.GitHubParameter.AccessToken);
-                client.Credentials = tokenAuth;
-
-                SearchRepositoriesRequest request = new SearchRepositoriesRequest();
-#pragma warning disable CS0618 // 型またはメンバーが旧型式です
-
-                // 値を持っているかどうかのチェック
-                request.Created = new DateRange(this.SearchCondition.SearchFrom, this.SearchCondition.SearchTo);
-
-                // スターの数
-                request.Stars = new Octokit.Range(1, int.MaxValue);
-
-                // 読み込むページ
-                request.Page = i;
-
-                // スターの数でソート
-                request.SortField = RepoSearchSort.Stars;
-
-                if (this.SearchCondition.SelectedLanguage.HasValue)
-                {
-                    request.Language = this.SearchCondition.SelectedLanguage;
-                }
-
-                // 降順でソート
-                request.Order = SortDirection.Descending;
-#pragma warning restore CS0618 // 型またはメンバーが旧型式です
-
-                var tmp = await client.Search.SearchRepo(request);
-                this._ResultList.AddRange(tmp.Items);
+                // 記事に関する各要素をセット
+                SetArticleInfo();
             }
+        }
+        #endregion
 
-            var summary = (from x in this._ResultList
+
+        #region 記事作成処理
+        /// <summary>
+        /// 記事作成処理
+        /// </summary>
+        /// <returns>記事</returns>
+        protected override string GetArticle()
+        {
+            DateTime startDt = this.SearchCondition.SearchFrom;
+            DateTime endDt = this.SearchCondition.SearchTo;
+
+            StringBuilder text = new StringBuilder();
+            text.AppendLine($"## GitHub調査日{DateTime.Today.ToString("yyyy/MM/dd")}");
+
+            text.AppendLine($"### 検索条件");
+
+            text.AppendLine($"- リポジトリ作成日 {startDt.ToString("yyyy/MM/dd")} - {endDt.ToString("yyyy/MM/dd")}");
+            text.AppendLine($"- 検索リポジトリ数 {this.SearchResults.Count}件");
+            text.AppendLine($"- ソート順：スター獲得数順");
+            text.AppendLine();
+
+            var summary = (from x in this.SearchResults
                            group x by x.Language into g
                            select new
                            {
@@ -115,16 +60,71 @@ namespace WPManager.Models.GitHub
                                StargazersCount = g.Sum(x => x.StargazersCount)
                            }).OrderByDescending(x => x.StargazersCount);
 
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine("|言語|スター獲得数|");
-            sb.AppendLine("|:-:|:-:|");
+            text.AppendLine($"### 検索結果");
+            text.AppendLine("|言語|スター獲得数|");
+            text.AppendLine("|:-:|:-:|");
             foreach (var tmp in summary)
             {
-                string lang = string.IsNullOrEmpty(tmp.Language) ? "不明" : tmp.Language;
-                sb.AppendLine($"|{lang}|{tmp.StargazersCount}|");
+                string lang = string.IsNullOrEmpty(tmp.Language) ? "不明" : tmp.Language + $" / [Wiki](https://ja.wikipedia.org/wiki/{tmp.Language.Replace(" ", "%20")})";
+                text.AppendLine($"|{lang}|{tmp.StargazersCount}|");
             }
 
-            return sb.ToString();
+            //convert Mark down to html and set to mdContents
+            Markdig.MarkdownPipeline markdownPipeline = new MarkdownPipelineBuilder().UsePipeTables().Build();
+
+            string mdContents = Markdown.ToHtml(text.ToString(), markdownPipeline);
+
+            return mdContents.Replace("<table>", "<table border=\"1\">");
+        }
+        #endregion
+
+
+        #region スラッグを作成する
+        /// <summary>
+        /// スラッグを作成する
+        /// </summary>
+        /// <returns>スラッグ</returns>
+        protected override string GetSlug()
+        {
+            string period = this.SearchCondition.SearchFrom.ToString("yyyy");
+            string lang = this.SearchCondition.SelectedLanguage.HasValue ? this.SearchCondition.SelectedLanguage.Value.ToString() : "all";
+
+            return ($"{period}-language-ranking");
+        }
+        #endregion
+
+        #region タイトルの作成処理
+        /// <summary>
+        /// タイトルの作成処理
+        /// </summary>
+        /// <returns>タイトル</returns>
+        protected override string GetTitle()
+        {
+            return $"GitHubのプログラミング言語人気ランキング！ {this.SearchCondition.SearchFrom.ToString("yyyy")}年版";
+        }
+        #endregion
+
+
+        #region 詳細の作成処理
+        /// <summary>
+        /// 詳細の作成処理
+        /// </summary>
+        /// <returns>詳細</returns>
+        protected override string GetDescription()
+        {
+            return GetTitle();
+        }
+        #endregion
+
+        #region 要約の作成処理
+        /// <summary>
+        /// 要約の作成処理
+        /// </summary>
+        /// <returns>要約</returns>
+        protected override string GetExcerpt()
+        {
+            return GetTitle();
+
         }
         #endregion
     }

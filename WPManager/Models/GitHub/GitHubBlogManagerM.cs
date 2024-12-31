@@ -167,7 +167,7 @@ namespace WPManager.Models.GitHub
         /// <returns>詳細</returns>
         protected override string GetDescription()
         {
-            return string.Empty;
+            return GetTitle();
         }
         #endregion
 
@@ -178,7 +178,7 @@ namespace WPManager.Models.GitHub
         /// <returns>要約</returns>
         protected override string GetExcerpt()
         {
-            return string.Empty;
+            return GetTitle();
 
         }
         #endregion
