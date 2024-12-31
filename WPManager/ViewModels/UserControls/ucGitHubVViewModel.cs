@@ -190,25 +190,23 @@ namespace WPManager.ViewModels.UserControls
 
             this.SearchResults = await client.Search.SearchRepo(request);
 
-            CreateArticle();
-            // 記事の作成
-            //this.Article = RepositorySearchResultM.GetArticle(this.SearchDateRange, request.Language, this.SearchResult);
-        }
-        #endregion
-
-        public void LanguageClear()
-        {
-            this.SelectedLanguage = null;
-        }
-
-        public void CreateArticle()
-        {
+            // nullチェック
             if (this.SearchResults != null)
             {
                 this.Article = GetArticle(this.DataObject.SearchFrom, this.DataObject.SearchTo, this.SelectedLanguage, this.SearchResults!);
             }
         }
+        #endregion
 
+        #region 言語選択の解除処理
+        /// <summary>
+        /// 言語選択の解除処理
+        /// </summary>
+        public void LanguageClear()
+        {
+            this.SelectedLanguage = null;
+        }
+        #endregion
 
         /// <summary>
         /// 記事
