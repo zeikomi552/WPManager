@@ -18,7 +18,10 @@
                 <ContentControl Margin="5" prism:RegionManager.RegionName="GitHubRegion"/>
             </TabItem>
             <TabItem Header="Civitai">
-                <ContentControl Margin="5" prism:RegionManager.RegionName="CivitaiRegion" Grid.Column="1"/>
+                <ContentControl Margin="5" prism:RegionManager.RegionName="CivitaiRegion"/>
+            </TabItem>
+            <TabItem Header="Wordpress">
+                <ContentControl Margin="5" prism:RegionManager.RegionName="WordpressRegion"/>
             </TabItem>
         </TabControl>
     </Grid>
