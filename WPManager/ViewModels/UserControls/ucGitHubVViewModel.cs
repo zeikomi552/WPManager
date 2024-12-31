@@ -1,4 +1,5 @@
-﻿using Octokit;
+﻿using Markdig;
+using Octokit;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -6,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WPManager.Models;
+using WPManager.Common.Extensions;
 
 namespace WPManager.ViewModels.UserControls
 {
@@ -111,6 +113,31 @@ namespace WPManager.ViewModels.UserControls
         }
         #endregion
 
+        #region 記事
+        /// <summary>
+        /// 記事
+        /// </summary>
+        string _Article = string.Empty;
+        /// <summary>
+        /// 記事
+        /// </summary>
+        public string Article
+        {
+            get
+            {
+                return _Article;
+            }
+            set
+            {
+                if (_Article == null || !_Article.Equals(value))
+                {
+                    _Article = value;
+                    RaisePropertyChanged("Article");
+                }
+            }
+        }
+        #endregion
+
 
 
         public ucGitHubVViewModel(IGlobalConfigM gConfig)
@@ -163,6 +190,7 @@ namespace WPManager.ViewModels.UserControls
 
             this.SearchResults = await client.Search.SearchRepo(request);
 
+            CreateArticle();
             // 記事の作成
             //this.Article = RepositorySearchResultM.GetArticle(this.SearchDateRange, request.Language, this.SearchResult);
         }
@@ -171,6 +199,63 @@ namespace WPManager.ViewModels.UserControls
         public void LanguageClear()
         {
             this.SelectedLanguage = null;
+        }
+
+        public void CreateArticle()
+        {
+            if (this.SearchResults != null)
+            {
+                this.Article = GetArticle(this.DataObject.SearchFrom, this.DataObject.SearchTo, this.SelectedLanguage, this.SearchResults!);
+            }
+        }
+
+
+        /// <summary>
+        /// 記事
+        /// </summary>
+        /// <returns>記事</returns>
+        public static string GetArticle(DateTime startDt, DateTime endDt, Language? search_language, SearchRepositoryResult repogitories)
+        {
+            StringBuilder text = new StringBuilder();
+            text.AppendLine($"## GitHubサーベイ 調査日{DateTime.Today.ToString("yyyy/MM/dd")}");
+
+            text.AppendLine($"### 検索条件");
+
+            text.AppendLine($"- リポジトリ作成日 {startDt.ToString("yyyy/MM/dd")} - {endDt.ToString("yyyy/MM/dd")}");
+
+            // 言語条件
+            if (search_language.HasValue)
+            {
+                text.AppendLine($"- 開発言語 {search_language}");
+            }
+
+            text.AppendLine($"- ソート順：スター獲得数順");
+            text.AppendLine();
+
+            text.AppendLine($"### 検索結果");
+            text.AppendLine($"|スター(順位)<br>使用言語|リポジトリ名<br>説明|検索|");
+            text.AppendLine($"|:-:|---|:-:|");
+            int rank = 1;
+            foreach (var repo in repogitories.Items)
+            {
+                string description = repo.Description.EmptyToText("-").CutText(50).Replace("|", "\\/");
+                string language = repo.Language.EmptyToText("-").CutText(20);
+
+                string homepage_url = !string.IsNullOrWhiteSpace(repo.Homepage) ? $" [[Home Page]({repo.Homepage})]" : string.Empty;
+
+                // 行情報の作成
+                text.AppendLine($"|<center>{repo.StargazersCount}<br>({rank++}位)<br>{language}</center>|" +
+                    $"[{repo.FullName}]({repo.HtmlUrl}){homepage_url}<br>{description}|" +
+                    $"[[google](https://www.google.com/search?q={repo.Name})] " +
+                    $"[[Qiita](https://qiita.com/search?q={repo.Name})]|");
+            }
+
+            //convert Mark down to html and set to mdContents
+            Markdig.MarkdownPipeline markdownPipeline = new MarkdownPipelineBuilder().UsePipeTables().Build();
+
+            string mdContents = Markdown.ToHtml(text.ToString(), markdownPipeline);
+
+            return mdContents;
         }
     }
 }

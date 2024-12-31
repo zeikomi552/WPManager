@@ -62,7 +62,7 @@
                 <ColumnDefinition Width="96*"/>
             </Grid.ColumnDefinitions>
             <DataGrid IsReadOnly="True" ItemsSource="{Binding SearchResults.Items}" SelectedItem="{Binding SelectedBlogArticle}"/>
-            <TextBox Grid.Column="1" Text="{Binding SelectedBlogArticle.Content.Rendered}" />
+            <TextBox Grid.Column="1" Text="{Binding Article}" />
         </Grid>
     </Grid>
 </UserControl>
