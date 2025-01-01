@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DryIoc;
+using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +12,32 @@ namespace WPManager.Models.Civitai
 {
     public class CivitaiBlogManagerM : BaseBlogManagerM
     {
+        #region ブログタイプ
+        /// <summary>
+        /// ブログタイプ
+        /// </summary>
+        CivitaiArticleType _ArticleType = CivitaiArticleType.Type1;
+        /// <summary>
+        /// ブログタイプ
+        /// </summary>
+        public CivitaiArticleType ArticleType
+        {
+            get
+            {
+                return _ArticleType;
+            }
+            set
+            {
+                if (!_ArticleType.Equals(value))
+                {
+                    _ArticleType = value;
+                    RaisePropertyChanged("ArticleType");
+                }
+            }
+        }
+        #endregion
+
+
         #region エンドポイント
         /// <summary>
         /// エンドポイント
@@ -148,6 +176,7 @@ namespace WPManager.Models.Civitai
                 slug = ($"{period}-civitai-{this.SearchCondition.Types.ToString()}");
             }
 
+            slug = slug + this.ArticleType.ToString();
             return slug;
         }
         #endregion
@@ -222,6 +251,11 @@ namespace WPManager.Models.Civitai
                 title = ($"{DateTime.Today.Year}年版 CIVITAI人気ダウンロード速報！{period}ダウンロード数ランキング");
             }
 
+            if (this.ArticleType == CivitaiArticleType.Type2)
+            {
+                title = title + " 画像付き！";
+            }
+
             return title;
         }
         #endregion
@@ -232,6 +266,28 @@ namespace WPManager.Models.Civitai
         /// </summary>
         /// <returns>記事</returns>
         private string GetArticle()
+        {
+            switch (this.ArticleType)
+            {
+                case CivitaiArticleType.Type1:
+                default:
+                    {
+                        return GetArticleType1();
+                    }
+                case CivitaiArticleType.Type2:
+                    {
+                        return GetArticleType2();
+                    }
+            }
+        }
+        #endregion
+
+        #region 記事タイプ1の取得(画像なしリスト)
+        /// <summary>
+        /// 記事タイプ1の取得(画像なしリスト)
+        /// </summary>
+        /// <returns>記事</returns>
+        private string GetArticleType1()
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine($"<h2>{GetTitle()}</h2>");
@@ -261,6 +317,89 @@ namespace WPManager.Models.Civitai
             sb.AppendLine($"</table>");
 
             // ファイル出力処理
+            return sb.ToString();
+        }
+        #endregion
+
+        #region 記事タイプ2の取得(画像ありリスト)
+        /// <summary>
+        /// 記事タイプ2の取得(画像ありリスト)
+        /// </summary>
+        /// <returns>記事</returns>
+        private string GetArticleType2()
+        {
+            // ダイアログのインスタンスを生成
+            var dialog = new SaveFileDialog();
+
+            // ファイルの種類を設定
+            dialog.Filter = "マークダウン (*.md)|*.md";
+
+            StringBuilder sb = new StringBuilder();
+
+            int rank = 1;
+            int imageid = 1;
+            foreach (var item in this.SearchResults.Items)
+            {
+                sb.AppendLine($"<h2> {rank++}位 {item.Id} {item.Name}</h2>");
+                sb.AppendLine($"");
+                sb.AppendLine($"<ul>");
+                sb.AppendLine($"<li>Creator : {item.Creator.Username}</li>");
+                sb.AppendLine($"<li>Download Count : {item.Stats.DownloadCount}</li>");
+                //sb.AppendLine($"<li>Favorite Count : {item.Stats.FavoriteCount}</li>");
+                sb.AppendLine($"<li>Comment Count : {item.Stats.CommentCount}</li>");
+                sb.AppendLine($"<li><a href=\"https://civitai.com/models/{item.Id}\">Page Link</a></li>");
+                sb.AppendLine($"</ul>");
+                sb.AppendLine($"");
+                foreach (var modelver in item.ModelVersions)
+                {
+                    sb.AppendLine($"<h3>ver : {modelver.Name}</h3>");
+                    sb.AppendLine($"<ul>");
+                    sb.AppendLine($"<li><a href=\"https://civitai.com/models/{item.Id}?modelVersionId={modelver.Id}\">ModelVersionURL</a></li>");
+                    sb.AppendLine($"<li><a href=\"{modelver.DownloadUrl}\">Model Download</a></li>");
+                    sb.AppendLine($"</ul>");
+
+                    sb.AppendLine($"");
+                    int count = 0;
+
+                    sb.AppendLine($"<!-- wp:gallery {{\"linkTo\":\"none\"}} -->");
+                    sb.AppendLine($"<figure class=\"wp-block-gallery has-nested-images columns-default is-cropped\">");
+
+                    foreach (var image in modelver.Images)
+                    {
+                        //sb.AppendLine($"");
+                        //sb.AppendLine($"{image.Nsfw}");
+
+                        if (image.Meta != null)
+                        {
+                            //sb.AppendLine($"```");
+                            //sb.AppendLine($"Prompt : {image.Meta.Prompt}");
+                            //sb.AppendLine($"");
+                            //sb.AppendLine($"Negative Prompt : {image.Meta.NegativPrompt}");
+                            //sb.AppendLine($"```");
+                            //sb.AppendLine($"");
+                            //sb.AppendLine($"");
+                            sb.AppendLine($"<!-- wp:image {{\"id\":{imageid},\"sizeSlug\":\"large\",\"linkDestination\":\"none\"}} -->");
+                            sb.AppendLine($"<figure class=\"wp-block-image size-large\">");
+                            sb.AppendLine($"<img src=\"{image.Url}\" alt=\"\" class=\"wp-image-{imageid}\"/>");
+                            sb.AppendLine($"</figure>");
+                            sb.AppendLine($"<!-- /wp:image -->");
+
+                            //sb.AppendLine($"<img alt=\"{image.Url}\" src=\"{image.Url}\" width=\"20%\">");
+
+                            imageid++;
+                            //sb.AppendLine($"");
+                            if (count++ >= 2) break;
+                            //break;
+                        }
+                    }
+                    sb.AppendLine($"</figure>");
+                    sb.AppendLine($"<!-- /wp:gallery -->");
+                    sb.AppendLine($"");
+
+                    break; // 先頭のモデルでループを抜ける
+                }
+                sb.AppendLine($"");
+            }
             return sb.ToString();
         }
         #endregion

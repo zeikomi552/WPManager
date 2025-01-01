@@ -211,6 +211,84 @@ namespace WPManager.Models.Civitai.Models
                 }
             }
             #endregion
+            #region thumbsUpCount
+            /// <summary>
+            /// thumbsUpCount
+            /// </summary>
+            int _ThumbsUpCount = 0;
+            /// <summary>
+            /// thumbsUpCount
+            /// </summary>
+            [JsonPropertyName("thumbsUpCount")]
+            public int ThumbsUpCount
+            {
+                get
+                {
+                    return _ThumbsUpCount;
+                }
+                set
+                {
+                    if (!_ThumbsUpCount.Equals(value))
+                    {
+                        _ThumbsUpCount = value;
+                        RaisePropertyChanged("ThumbsUpCount");
+                    }
+                }
+            }
+            #endregion
+
+            #region thumbsUpCount
+            /// <summary>
+            /// thumbsUpCount
+            /// </summary>
+            int _ThumbsDownCount = 0;
+            /// <summary>
+            /// thumbsUpCount
+            /// </summary>
+            [JsonPropertyName("thumbsDownCount")]
+            public int ThumbsDownCount
+            {
+                get
+                {
+                    return _ThumbsDownCount;
+                }
+                set
+                {
+                    if (!_ThumbsDownCount.Equals(value))
+                    {
+                        _ThumbsDownCount = value;
+                        RaisePropertyChanged("ThumbsDownCount");
+                    }
+                }
+            }
+            #endregion
+
+            #region tippedAmountCount
+            /// <summary>
+            /// tippedAmountCount
+            /// </summary>
+            int _TippedAmountCount = 0;
+            /// <summary>
+            /// tippedAmountCount
+            /// </summary>
+            [JsonPropertyName("tippedAmountCount")]
+            public int TippedAmountCount
+            {
+                get
+                {
+                    return _TippedAmountCount;
+                }
+                set
+                {
+                    if (!_TippedAmountCount.Equals(value))
+                    {
+                        _TippedAmountCount = value;
+                        RaisePropertyChanged("TippedAmountCount");
+                    }
+                }
+            }
+            #endregion
+
 
         }
         #endregion
@@ -856,12 +934,12 @@ namespace WPManager.Models.Civitai.Models
                 /// <summary>
                 /// Whether or not the image is NSFW (note: if the model is NSFW, treat all images on the model as NSFW)[Nsfw]プロパティ用変数
                 /// </summary>
-                string _Nsfw = string.Empty;
+                bool _Nsfw = false;
                 /// <summary>
                 /// Whether or not the image is NSFW (note: if the model is NSFW, treat all images on the model as NSFW)[Nsfw]プロパティ
                 /// </summary>
                 [JsonPropertyName("nsfw")]
-                public string Nsfw
+                public bool Nsfw
                 {
                     get
                     {
@@ -869,7 +947,7 @@ namespace WPManager.Models.Civitai.Models
                     }
                     set
                     {
-                        if (_Nsfw == null || !_Nsfw.Equals(value))
+                        if (!_Nsfw.Equals(value))
                         {
                             _Nsfw = value;
                             RaisePropertyChanged("Nsfw");
@@ -1094,7 +1172,57 @@ namespace WPManager.Models.Civitai.Models
                 }
                 #endregion
 
+                #region thumbsUpCount
+                /// <summary>
+                /// thumbsUpCount
+                /// </summary>
+                int _ThumbsUpCount = 0;
+                /// <summary>
+                /// thumbsUpCount
+                /// </summary>
+                [JsonPropertyName("thumbsUpCount")]
+                public int ThumbsUpCount
+                {
+                    get
+                    {
+                        return _ThumbsUpCount;
+                    }
+                    set
+                    {
+                        if (!_ThumbsUpCount.Equals(value))
+                        {
+                            _ThumbsUpCount = value;
+                            RaisePropertyChanged("ThumbsUpCount");
+                        }
+                    }
+                }
+                #endregion
 
+                #region thumbsUpCount
+                /// <summary>
+                /// thumbsUpCount
+                /// </summary>
+                int _ThumbsDownCount = 0;
+                /// <summary>
+                /// thumbsUpCount
+                /// </summary>
+                [JsonPropertyName("thumbsDownCount")]
+                public int ThumbsDownCount
+                {
+                    get
+                    {
+                        return _ThumbsDownCount;
+                    }
+                    set
+                    {
+                        if (!_ThumbsDownCount.Equals(value))
+                        {
+                            _ThumbsDownCount = value;
+                            RaisePropertyChanged("ThumbsDownCount");
+                        }
+                    }
+                }
+                #endregion
             }
             #endregion
             #endregion
@@ -1177,31 +1305,111 @@ namespace WPManager.Models.Civitai.Models
             }
             #endregion
 
-            #region The date in which the version was created[CreatedAt]プロパティ
+            #region PublishedAt
             /// <summary>
-            /// The date in which the version was created[CreatedAt]プロパティ用変数
+            /// PublishedAt
             /// </summary>
-            DateTime _CreatedAt = DateTime.MinValue;
+            DateTime? _PublishedAt = null;
             /// <summary>
-            /// The date in which the version was created[CreatedAt]プロパティ
+            /// PublishedAt
             /// </summary>
-            [JsonPropertyName("createdAt")]
-            public DateTime CreatedAt
+            [JsonPropertyName("publishedAt")]
+            public DateTime? PublishedAt
             {
                 get
                 {
-                    return _CreatedAt;
+                    return _PublishedAt;
                 }
                 set
                 {
-                    if (!_CreatedAt.Equals(value))
+                    if (!_PublishedAt.Equals(value))
                     {
-                        _CreatedAt = value;
-                        RaisePropertyChanged("CreatedAt");
+                        _PublishedAt = value;
+                        RaisePropertyChanged("PublishedAt");
                     }
                 }
             }
             #endregion
+
+            #region BaseModel
+            /// <summary>
+            /// BaseModel
+            /// </summary>
+            string _BaseModel = string.Empty;
+            /// <summary>
+            /// BaseModel
+            /// </summary>
+            [JsonPropertyName("baseModel")]
+            public string BaseModel
+            {
+                get
+                {
+                    return _BaseModel;
+                }
+                set
+                {
+                    if (_BaseModel == null || !_BaseModel.Equals(value))
+                    {
+                        _BaseModel = value;
+                        RaisePropertyChanged("BaseModel");
+                    }
+                }
+            }
+            #endregion
+
+            #region BaseModelType
+            /// <summary>
+            /// BaseModelType
+            /// </summary>
+            string _BaseModelType = string.Empty;
+            /// <summary>
+            /// BaseModelType
+            /// </summary>
+            [JsonPropertyName("baseModelType")]
+            public string BaseModelType
+            {
+                get
+                {
+                    return _BaseModelType;
+                }
+                set
+                {
+                    if (_BaseModelType == null || !_BaseModelType.Equals(value))
+                    {
+                        _BaseModelType = value;
+                        RaisePropertyChanged("BaseModelType");
+                    }
+                }
+            }
+            #endregion
+
+            #region Availability
+            /// <summary>
+            /// Availability
+            /// </summary>
+            string _Availability = string.Empty;
+            /// <summary>
+            /// Availability
+            /// </summary>
+            [JsonPropertyName("availability")]
+            public string Availability
+            {
+                get
+                {
+                    return _Availability;
+                }
+                set
+                {
+                    if (_Availability == null || !_Availability.Equals(value))
+                    {
+                        _Availability = value;
+                        RaisePropertyChanged("Availability");
+                    }
+                }
+            }
+            #endregion
+
+
 
             #region The download url to get the model file for this specific version[DownloadUrl]プロパティ
             /// <summary>
@@ -1496,6 +1704,32 @@ namespace WPManager.Models.Civitai.Models
             }
             #endregion
 
+            #region Whether or not the image is NSFW (note: if the model is NSFW, treat all images on the model as NSFW)[Nsfw]プロパティ
+            /// <summary>
+            /// Whether or not the image is NSFW (note: if the model is NSFW, treat all images on the model as NSFW)[Nsfw]プロパティ用変数
+            /// </summary>
+            int _NsfwLevel = 0;
+            /// <summary>
+            /// Whether or not the image is NSFW (note: if the model is NSFW, treat all images on the model as NSFW)[Nsfw]プロパティ
+            /// </summary>
+            [JsonPropertyName("nsfwLevel")]
+            public int NsfwLevel
+            {
+                get
+                {
+                    return _NsfwLevel;
+                }
+                set
+                {
+                    if (!_NsfwLevel.Equals(value))
+                    {
+                        _NsfwLevel = value;
+                        RaisePropertyChanged("NsfwLevel");
+                    }
+                }
+            }
+            #endregion
+
             #region The tags associated with the model[Tags]プロパティ
             /// <summary>
             /// The tags associated with the model[Tags]プロパティ用変数
@@ -1656,23 +1890,23 @@ namespace WPManager.Models.Civitai.Models
             /// <summary>
             /// Filter to models that allow or don't allow derivatives to have a different license[AllowDifferentLicenses]プロパティ用変数
             /// </summary>
-            bool _AllowDifferentLicenses = false;
+            bool _AllowDifferentLicense = false;
             /// <summary>
             /// Filter to models that allow or don't allow derivatives to have a different license[AllowDifferentLicenses]プロパティ
             /// </summary>
-            [JsonPropertyName("allowDifferentLicenses")]
-            public bool AllowDifferentLicenses
+            [JsonPropertyName("allowDifferentLicense")]
+            public bool AllowDifferentLicense
             {
                 get
                 {
-                    return _AllowDifferentLicenses;
+                    return _AllowDifferentLicense;
                 }
                 set
                 {
-                    if (!_AllowDifferentLicenses.Equals(value))
+                    if (!_AllowDifferentLicense.Equals(value))
                     {
-                        _AllowDifferentLicenses = value;
-                        RaisePropertyChanged("AllowDifferentLicenses");
+                        _AllowDifferentLicense = value;
+                        RaisePropertyChanged("AllowDifferentLicense");
                     }
                 }
             }
@@ -1682,13 +1916,12 @@ namespace WPManager.Models.Civitai.Models
             /// <summary>
             /// Filter to models based on their commercial permissions[AllowCommercialUse]プロパティ用変数
             /// </summary>
-            string _AllowCommercialUse = string.Empty;
+            List<string> _AllowCommercialUse = new List<string>();
             /// <summary>
             /// Filter to models based on their commercial permissions[AllowCommercialUse]プロパティ
             /// </summary>
             [JsonPropertyName("allowCommercialUse")]
-            [JsonConverter(typeof(EmptyArrayToObjectConverter<string>))]
-            public string AllowCommercialUse
+            public List<string> AllowCommercialUse
             {
                 get
                 {
@@ -1700,6 +1933,58 @@ namespace WPManager.Models.Civitai.Models
                     {
                         _AllowCommercialUse = value;
                         RaisePropertyChanged("AllowCommercialUse");
+                    }
+                }
+            }
+            #endregion
+
+            #region Poi
+            /// <summary>
+            /// Poi[Poi]プロパティ用変数
+            /// </summary>
+            bool _Poi = false;
+            /// <summary>
+            /// 
+            /// </summary>
+            [JsonPropertyName("poi")]
+            public bool Poi
+            {
+                get
+                {
+                    return _Poi;
+                }
+                set
+                {
+                    if (!_Poi.Equals(value))
+                    {
+                        _Poi = value;
+                        RaisePropertyChanged("Poi");
+                    }
+                }
+            }
+            #endregion
+
+            #region minor
+            /// <summary>
+            /// minor
+            /// </summary>
+            bool _Minor = false;
+            /// <summary>
+            /// minor
+            /// </summary>
+            [JsonPropertyName("minor")]
+            public bool Minor
+            {
+                get
+                {
+                    return _Minor;
+                }
+                set
+                {
+                    if (!_Minor.Equals(value))
+                    {
+                        _Minor = value;
+                        RaisePropertyChanged("Minor");
                     }
                 }
             }
