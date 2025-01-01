@@ -37,13 +37,13 @@ namespace WPManager.Models.GitHub
         }
         #endregion
 
-        #region データオブジェクト
+        #region 検索条件
         /// <summary>
-        /// データオブジェクト
+        /// 検索条件
         /// </summary>
         GitHubDataObjectM _SearchCondition = new GitHubDataObjectM();
         /// <summary>
-        /// データオブジェクト
+        /// 検索条件
         /// </summary>
         public GitHubDataObjectM SearchCondition
         {
@@ -105,6 +105,25 @@ namespace WPManager.Models.GitHub
             }
 
             return list;
+        }
+        #endregion
+
+        #region 検索の実行処理
+        /// <summary>
+        /// 検索の実行処理
+        /// </summary>
+        public virtual async void Search()
+        {
+            var result = await Search(0);
+
+            this.SearchResults = new ObservableCollection<Repository>(result.Items.ToList<Repository>());
+
+            // nullチェック
+            if (this.SearchResults != null)
+            {
+                // 記事に関する各要素をセット
+                SetArticleInfo();
+            }
         }
         #endregion
 

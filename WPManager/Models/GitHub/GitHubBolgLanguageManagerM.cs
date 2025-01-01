@@ -16,7 +16,7 @@ namespace WPManager.Models.GitHub
         /// <summary>
         /// 検索処理
         /// </summary>
-        public async void Search()
+        public override async void Search()
         {
             var result = await SearchPageMax(10);   // 1ページ目の検索処理
 

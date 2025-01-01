@@ -20,18 +20,9 @@ namespace WPManager.Models.GitHub
         /// <summary>
         /// 検索処理
         /// </summary>
-        public async void Search()
+        public override void Search()
         {
-            var result = await Search(1);   // 1ページ目の検索処理
-
-            this.SearchResults = new ObservableCollection<Repository>(result.Items.ToList<Repository>());
-
-            // nullチェック
-            if (this.SearchResults != null)
-            {
-                // 記事に関する各要素をセット
-                SetArticleInfo();
-            }
+            base.Search();
         }
         #endregion
 

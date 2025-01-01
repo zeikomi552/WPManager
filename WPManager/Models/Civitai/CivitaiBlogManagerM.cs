@@ -17,6 +17,31 @@ namespace WPManager.Models.Civitai
         const string EndPoint = "https://civitai.com/api/v1/models";
         #endregion
 
+        #region 検索条件
+        /// <summary>
+        /// 検索条件
+        /// </summary>
+        CvsModelSearchM _SearchCondition = new CvsModelSearchM();
+        /// <summary>
+        /// 検索条件
+        /// </summary>
+        public CvsModelSearchM SearchCondition
+        {
+            get
+            {
+                return _SearchCondition;
+            }
+            set
+            {
+                if (_SearchCondition == null || !_SearchCondition.Equals(value))
+                {
+                    _SearchCondition = value;
+                    RaisePropertyChanged("SearchCondition");
+                }
+            }
+        }
+        #endregion
+
         #region 検索結果
         /// <summary>
         /// 検索結果
@@ -43,32 +68,6 @@ namespace WPManager.Models.Civitai
         }
         #endregion
 
-
-        #region 検索条件
-        /// <summary>
-        /// 検索条件
-        /// </summary>
-        CvsModelSearchM _SearchCondition = new CvsModelSearchM();
-        /// <summary>
-        /// 検索条件
-        /// </summary>
-        public CvsModelSearchM SearchCondition
-        {
-            get
-            {
-                return _SearchCondition;
-            }
-            set
-            {
-                if (_SearchCondition == null || !_SearchCondition.Equals(value))
-                {
-                    _SearchCondition = value;
-                    RaisePropertyChanged("SearchCondition");
-                }
-            }
-        }
-        #endregion
-
         #region 検索処理
         /// <summary>
         /// 検索処理
@@ -87,11 +86,11 @@ namespace WPManager.Models.Civitai
         /// </summary>
         private void SetArticleInfo()
         {
-            this.Article.Title = CreateTitle();
-            this.Article.Slug = CreateSlug();
-            this.Article.Content = CreateArticle();
-            this.Article.Description = CreateTitle();
-            this.Article.Excerpt = CreateTitle();
+            this.Article.Title = GetTitle();
+            this.Article.Slug = GetSlug();
+            this.Article.Content = GetArticle();
+            this.Article.Description = GetDescription();
+            this.Article.Excerpt = GetExcerpt();
             RaisePropertyChanged("Article");
         }
         #endregion
@@ -101,7 +100,7 @@ namespace WPManager.Models.Civitai
         /// スラッグを作成する
         /// </summary>
         /// <returns>スラッグ</returns>
-        private string CreateSlug()
+        private string GetSlug()
         {
             string slug = string.Empty;
 
@@ -158,7 +157,7 @@ namespace WPManager.Models.Civitai
         /// タイトルの作成処理
         /// </summary>
         /// <returns>タイトル</returns>
-        private string CreateTitle()
+        private string GetTitle()
         {
             string title = string.Empty;
 
@@ -232,10 +231,10 @@ namespace WPManager.Models.Civitai
         /// 記事の作成処理
         /// </summary>
         /// <returns>記事</returns>
-        private string CreateArticle()
+        private string GetArticle()
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine($"<h2>{CreateTitle()}</h2>");
+            sb.AppendLine($"<h2>{GetTitle()}</h2>");
             sb.AppendLine($"<p>データ取得日 : {DateTime.Today.ToString("yyyy/MM/dd")}</p>");
 
             sb.AppendLine($"<table border=\"1\">");
@@ -263,6 +262,28 @@ namespace WPManager.Models.Civitai
 
             // ファイル出力処理
             return sb.ToString();
+        }
+        #endregion
+
+        #region 説明の取得
+        /// <summary>
+        /// 説明の取得
+        /// </summary>
+        /// <returns>説明</returns>
+        public string GetDescription()
+        {
+            return GetTitle();
+        }
+        #endregion
+
+        #region 要約の取得
+        /// <summary>
+        /// 要約の取得
+        /// </summary>
+        /// <returns>要約</returns>
+        public string GetExcerpt()
+        {
+            return GetTitle();
         }
         #endregion
     }
