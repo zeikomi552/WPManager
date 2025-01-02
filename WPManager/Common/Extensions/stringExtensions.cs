@@ -44,9 +44,7 @@ namespace WPManager.Common.Extensions
                 .Replace("<", "&lt;")
                 .Replace(">", "&gt;")
                 .Replace("'", "&#39;")
-                .Replace("\"", "&quot;")
-                .Replace("&", "&amp;")
-                .Replace("\\", "&yen;");
+                .Replace("\"", "&quot;");
         }
     }
 }

@@ -307,8 +307,8 @@ namespace WPManager.Models.Civitai
             int imageid = 1;
             foreach (var item in this.SearchResults.Items)
             {
-                sb.AppendLine($"<!-- wp:heading -->");
-                sb.AppendLine($"<h2 class=\"wp-block-heading\">{rank++}位 {item.Username}</h2>");
+                sb.AppendLine($"<!-- wp:heading {{\"backgroundColor\":\"accent-5\"}} -->");
+                sb.AppendLine($"<h2 class=\"wp-block-heading has-accent-5-background-color has-background\">{rank++}位 {item.Username}</h2>");
                 sb.AppendLine($"<!-- /wp:heading -->");
                 sb.AppendLine($"");
 
@@ -363,7 +363,6 @@ namespace WPManager.Models.Civitai
                         sb.AppendLine($"</ul>");
                     }
 
-                    sb.AppendLine($"<h3>Prompt</h3>");
                     if (!string.IsNullOrEmpty(item.Meta.Prompt))
                     {
                         sb.AppendLine($"<!-- wp:loos-hcb/code-block {{\"langType\":\"prompt\",\"langName\":\"Prompt\"}} -->");
@@ -379,7 +378,6 @@ namespace WPManager.Models.Civitai
                         sb.AppendLine($"</ul>");
                     }
 
-                    sb.AppendLine($"<h3>Negative Prompt</h3>");
                     if (!string.IsNullOrEmpty(item.Meta.NegativePrompt))
                     {
                         sb.AppendLine($"<!-- wp:loos-hcb/code-block {{\"langType\":\"negativeprompt\",\"langName\":\"Negative Prompt\"}} -->");
