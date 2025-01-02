@@ -16,6 +16,7 @@ namespace WPManager.Common
             regionManager.RegisterViewWithRegion("GitHubLanguageRegion", typeof(ucGitHubLanguageV));
             regionManager.RegisterViewWithRegion("WordpressRegion", typeof(ucWordpressV));
             regionManager.RegisterViewWithRegion("CivitaiRegion", typeof(ucCivitaiV));
+            regionManager.RegisterViewWithRegion("CivitaiImageRegion", typeof(ucCivitaiImageV));
         }
 
         public void RegisterTypes(IContainerRegistry containerRegistry)

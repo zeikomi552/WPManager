@@ -44,7 +44,6 @@ namespace WPManager.Models.Civitai.Enums
         Empty,
         [Description("Most Reactions")]
         Most_Reactions,
-        Most_Buzz,
         [Description("Most Comments")]
         Most_Comments,
         [Description("Most Collected")]
