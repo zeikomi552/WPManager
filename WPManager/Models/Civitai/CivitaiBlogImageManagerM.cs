@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WPManager.Common.Extensions;
 using WPManager.Models.Civitai.Enums;
 using WPManager.Models.Civitai.Images;
 using WPManager.Models.Civitai.Models;
@@ -306,8 +307,12 @@ namespace WPManager.Models.Civitai
             int imageid = 1;
             foreach (var item in this.SearchResults.Items)
             {
-                sb.AppendLine($"<h2> {rank++}位 {item.Username}</h2>");
+                sb.AppendLine($"<!-- wp:heading -->");
+                sb.AppendLine($"<h2 class=\"wp-block-heading\">{rank++}位 {item.Username}</h2>");
+                sb.AppendLine($"<!-- /wp:heading -->");
                 sb.AppendLine($"");
+
+                sb.AppendLine($"<!-- wp:list -->");
                 sb.AppendLine($"<ul>");
                 sb.AppendLine($"<li>CreatedAt : {item.CreatedAt.ToString("yyyy/MM/dd")}</li>");
                 sb.AppendLine($"<li>Author : <a href=\"https://civitai.com/user/{item.Username}\">{item.Username}</a></li>");
@@ -316,34 +321,79 @@ namespace WPManager.Models.Civitai
                 sb.AppendLine($"<li>Count : Like({item.Stats.LikeCount}) Heart({item.Stats.HeartCount})</li>");
                 sb.AppendLine($"<li><a href=\"{item.ImageURL}\">{item.ImageURL}</a></li>");
                 sb.AppendLine($"</ul>");
-                sb.AppendLine($"<center><img alt=\"{item.Url}\" src=\"{item.Url}\" width=\"50%\"></center>");
-                sb.AppendLine($"");
-                sb.AppendLine($"</figure>");
-                sb.AppendLine($"<!-- /wp:gallery -->");
+                sb.AppendLine($"<!-- /wp:list -->");
 
+                string ext = System.IO.Path.GetExtension(item.Url).ToLower();
+                if (ext.Equals(".mp4"))
+                {
+                    sb.AppendLine("<!-- wp:group {\"layout\":{\"type\":\"constrained\",\"contentSize\":\"300px\"}} -->");
+                    sb.AppendLine($"<div class=\"wp-block-group\">");
+                    sb.AppendLine($"<!-- wp:video -->");
+                    sb.AppendLine($"<figure class=\"wp-block-video\"><video controls src=\"{item.Url}\"></video></figure>");
+                    sb.AppendLine($"<!-- /wp:video -->");
+                    sb.AppendLine($"</div>");
+                    sb.AppendLine($"<!-- /wp:group -->");
+                }
+                else
+                {
+
+                    sb.AppendLine($"<!-- wp:image {{\"width\":\"300px\",\"linkDestination\":\"none\",\"align\":\"center\",\"className\":\"size-large\"}} -->");
+                    sb.AppendLine($"<figure class=\"wp-block-image aligncenter is-resized size-large\"><img src=\"{item.Url}\"  alt=\"\" style=\"width:300px\"/></figure>");
+                    sb.AppendLine($"<!-- /wp:image -->");
+                }
+
+                sb.AppendLine($"");
 
                 if (item.Meta != null)
                 {
                     sb.AppendLine($"<h3>Model</h3>");
 
                     if (!string.IsNullOrEmpty(item.Meta.Model))
+                    {
+                        sb.AppendLine($"<ul>");
+                        sb.AppendLine($"<li>");
                         sb.AppendLine($"<a href=\"https://www.google.co.jp/search?q=civitai/{item.Meta.Model}\">{item.Meta.Model}</a>");
+                        sb.AppendLine($"</li>");
+                        sb.AppendLine($"</ul>");
+                    }
                     else
-                        sb.AppendLine($"<p>記載なし</p>");
-
+                    {
+                        sb.AppendLine($"<ul>");
+                        sb.AppendLine($"<li>記載なし</li>");
+                        sb.AppendLine($"</ul>");
+                    }
 
                     sb.AppendLine($"<h3>Prompt</h3>");
                     if (!string.IsNullOrEmpty(item.Meta.Prompt))
-                        sb.AppendLine($"<code>{item.Meta.Prompt}</code>");
+                    {
+                        sb.AppendLine($"<!-- wp:loos-hcb/code-block {{\"langType\":\"prompt\",\"langName\":\"Prompt\"}} -->");
+                        sb.AppendLine($"<div class=\"hcb_wrap\"><pre class=\"prism undefined-numbers lang-prompt\" data-lang=\"Prompt\">");
+                        sb.AppendLine($"<code>{item.Meta.Prompt.HtmlCodeEscape()}</code>");
+                        sb.AppendLine($"</pre></div>");
+                        sb.AppendLine($"<!-- /wp:loos-hcb/code-block -->");
+                    }
                     else
-                        sb.AppendLine($"<p>記載なし</p>");
-
+                    {
+                        sb.AppendLine($"<ul>");
+                        sb.AppendLine($"<li>記載なし</li>");
+                        sb.AppendLine($"</ul>");
+                    }
 
                     sb.AppendLine($"<h3>Negative Prompt</h3>");
                     if (!string.IsNullOrEmpty(item.Meta.NegativePrompt))
-                        sb.AppendLine($"<code>{item.Meta.NegativePrompt}</code>");
+                    {
+                        sb.AppendLine($"<!-- wp:loos-hcb/code-block {{\"langType\":\"negativeprompt\",\"langName\":\"Negative Prompt\"}} -->");
+                        sb.AppendLine($"<div class=\"hcb_wrap\"><pre class=\"prism undefined-numbers lang-negativeprompt\" data-lang=\"Negative Prompt\">");
+                        sb.AppendLine($"<code>{item.Meta.NegativePrompt.HtmlCodeEscape()}</code>");
+                        sb.AppendLine($"</pre></div>");
+                        sb.AppendLine($"<!-- /wp:loos-hcb/code-block -->");
+                    }
                     else
-                        sb.AppendLine($"<p>記載なし</p>");
+                    {
+                        sb.AppendLine($"<ul>");
+                        sb.AppendLine($"<li>記載なし</li>");
+                        sb.AppendLine($"</ul>");
+                    }
                 }
                 sb.AppendLine($"");
                 imageid++;

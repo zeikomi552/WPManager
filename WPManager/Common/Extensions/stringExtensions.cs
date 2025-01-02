@@ -32,5 +32,21 @@ namespace WPManager.Common.Extensions
             }
 
         }
+
+        /// <summary>
+        /// Htmlコードのエスケープ処理
+        /// </summary>
+        /// <param name="str">文字列</param>
+        /// <returns>エスケープ文字の変換結果</returns>
+        public static string HtmlCodeEscape(this string str)
+        {
+            return str
+                .Replace("<", "&lt;")
+                .Replace(">", "&gt;")
+                .Replace("'", "&#39;")
+                .Replace("\"", "&quot;")
+                .Replace("&", "&amp;")
+                .Replace("\\", "&yen;");
+        }
     }
 }
