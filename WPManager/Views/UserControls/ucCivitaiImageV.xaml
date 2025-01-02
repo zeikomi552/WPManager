@@ -43,6 +43,13 @@
                                               SelectedValue="{Binding BlogManager.ArticleType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                                               DisplayMemberPath="Description" SelectedValuePath="Value"  />
                     </StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <TextBlock Width="auto" TextAlignment="Right" VerticalAlignment="Center" Margin="5" Text="記事 or 固定ページ"/>
+                        <TextBlock VerticalAlignment="Center" Margin="5" Text=":"/>
+                        <ComboBox Margin="5" Width="80" ItemsSource="{Binding Mode=OneWay, Source={my:Enumeration {x:Type enum:CivitaiPostOrPage}}}"
+                                              SelectedValue="{Binding BlogManager.PostOrPage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                              DisplayMemberPath="Description" SelectedValuePath="Value"  />
+                    </StackPanel>
                 </WrapPanel>
                 <StackPanel Grid.Row="1">
                     <StackPanel Orientation="Horizontal">

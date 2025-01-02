@@ -151,6 +151,55 @@ namespace WPManager.Models
         }
 
 
+        public async Task CreateOrUpdatePages(WPDataObjectM wpObject)
+        {
+            // Get valid WordPress Client
+            WordPressClient wpClient = new WordPressClient(this.EndpointUri);
+
+            //Basic Auth
+            wpClient.Auth.UseBasicAuth(this.UserName, this.Password);
+
+            //Or, Bearer Auth using JWT tokens
+            //wpClient.Auth.UseBearerAuth(JWTPlugin.JWTAuthByEnriqueChavez);
+            //wpClient.Auth.RequestJWTokenAsync("username", "password");
+            //var isValidToken = wpClient.Auth.IsValidJWTokenAsync;
+
+            //Create and Set Post object
+            var page = new Page
+            {
+                Title = new Title(wpObject.Title),
+                Meta = new Description(wpObject.Description),
+                Excerpt = new Excerpt(wpObject.Excerpt),
+                Content = new Content(wpObject.Content),
+                //slug should be in lower case with hypen(-) separator 
+                Slug = wpObject.Slug
+            };
+
+            if (wpObject.PostId == 0)
+            {
+                // if you want to hide comment section
+                page.CommentStatus = OpenStatus.Closed;
+                // Set it to draft section if you want to review and then publish
+                page.Status = Status.Draft;
+                // Create and get new the post id
+                //postid = wpClient.Posts.CreateAsync(post).Result.Id;
+                var tmp = wpClient.Pages.CreateAsync(page).Result;
+
+                // read Note section below - Why update the Post again?
+                await wpClient.Pages.UpdateAsync(tmp);
+            }
+            else
+            {
+                // check the status of post (draft or publish) and then update
+                page.Id = wpObject.PostId;
+                if (IsPageDraftStatus(wpClient, wpObject.PostId))
+                {
+                    page.Status = Status.Draft;
+                }
+
+                await wpClient.Pages.UpdateAsync(page);
+            }
+        }
 
         private static bool IsPostDraftStatus(WordPressClient client, int postId)
         {
@@ -166,7 +215,19 @@ namespace WPManager.Models
             }
         }
 
+        private static bool IsPageDraftStatus(WordPressClient client, int postId)
+        {
+            var result = client.Pages.GetByIDAsync(postId, true, true).Result;
 
+            if (result.Status == Status.Draft)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
         public async Task<ObservableCollection<Post>> GetPost()
         {
             // Initialize

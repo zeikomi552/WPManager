@@ -18,6 +18,8 @@ namespace WPManager.Models
 
         public Task CreateOrUpdatePost(WPDataObjectM wpObject);
 
+        public Task CreateOrUpdatePages(WPDataObjectM wpObject);
+
         public Task<ObservableCollection<Post>> GetPost();
     }
 }

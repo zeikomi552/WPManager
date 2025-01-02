@@ -5,11 +5,36 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using WPManager.Models.Civitai;
+using WPManager.Models.Civitai.Enums;
 
 namespace WPManager.Models
 {
     public class BaseBlogManagerM : BindableBase
     {
+        #region ブログタイプ
+        /// <summary>
+        /// ブログタイプ
+        /// </summary>
+        CivitaiPostOrPage _PostOrPage = CivitaiPostOrPage.Post;
+        /// <summary>
+        /// ブログタイプ
+        /// </summary>
+        public CivitaiPostOrPage PostOrPage
+        {
+            get
+            {
+                return _PostOrPage;
+            }
+            set
+            {
+                if (!_PostOrPage.Equals(value))
+                {
+                    _PostOrPage = value;
+                    RaisePropertyChanged("PostOrPage");
+                }
+            }
+        }
+        #endregion
 
         #region ブログ記事
         /// <summary>
@@ -46,7 +71,14 @@ namespace WPManager.Models
         {
             Task.Run(() =>
             {
-                wpParam.CreateOrUpdatePost(this.Article).Wait();
+                if (this.PostOrPage == CivitaiPostOrPage.Post)
+                {
+                    wpParam.CreateOrUpdatePost(this.Article).Wait();
+                }
+                else
+                {
+                    wpParam.CreateOrUpdatePages(this.Article).Wait();
+                }
             });
         }
         #endregion

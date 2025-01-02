@@ -38,7 +38,6 @@ namespace WPManager.Models.Civitai
         }
         #endregion
 
-
         #region エンドポイント
         /// <summary>
         /// エンドポイント
@@ -256,45 +255,6 @@ namespace WPManager.Models.Civitai
         /// <returns>記事</returns>
         private string GetArticleType1()
         {
-            StringBuilder sb = new StringBuilder();
-            //sb.AppendLine($"<h2>{GetTitle()}</h2>");
-            //sb.AppendLine($"<p>データ取得日 : {DateTime.Today.ToString("yyyy/MM/dd")}</p>");
-
-            //sb.AppendLine($"<table border=\"1\">");
-            //sb.AppendLine($"<thead>");
-            //sb.AppendLine($"<tr>");
-            //sb.AppendLine($"<th><center>順位</center><center>(DL数)</center></th>");
-            //sb.AppendLine($"<th>モデルID / 作者名<br>モデル名</th>");
-            //sb.AppendLine($"<th>モデルタイプ</th>");
-            //sb.AppendLine($"</tr>");
-            //sb.AppendLine($"</thead>");
-            //sb.AppendLine($"<tbody>");
-
-            //int rank = 1;
-            //foreach (var item in this.SearchResults.Items)
-            //{
-            //    sb.AppendLine($"<tr>");
-            //    sb.AppendLine($"<td><center>{rank++}位</center><center>({item.Stats.DownloadCount})</center></td>");
-            //    sb.AppendLine($"<td>{item.Id} / <a href=\"https://civitai.com/user/{item.Creator.Username}/models\">{item.Creator.Username}</a>");
-            //    sb.AppendLine($"<a href=\"https://civitai.com/models/{item.Id}\">{item.Name.Replace("|", "\\|")}</a></td>");
-            //    sb.AppendLine($"<td>{item.Type}</td>");
-            //    sb.AppendLine($"</tr>");
-            //}
-            //sb.AppendLine($"</tbody>");
-            //sb.AppendLine($"</table>");
-
-            // ファイル出力処理
-            return sb.ToString();
-        }
-        #endregion
-
-        #region 記事タイプ2の取得(画像ありリスト)
-        /// <summary>
-        /// 記事タイプ2の取得(画像ありリスト)
-        /// </summary>
-        /// <returns>記事</returns>
-        private string GetArticleType2()
-        {
             //// ダイアログのインスタンスを生成
             //var dialog = new SaveFileDialog();
 
@@ -396,6 +356,146 @@ namespace WPManager.Models.Civitai
                 sb.AppendLine($"");
                 imageid++;
             }
+            return sb.ToString();
+        }
+        #endregion
+
+        #region 記事タイプ2の取得(画像ありリスト)
+        /// <summary>
+        /// 記事タイプ2の取得(画像ありリスト)
+        /// </summary>
+        /// <returns>記事</returns>
+        private string GetArticleType2()
+        {
+            var first = this.SearchResults.Items.ElementAt(0);
+
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("<!-- wp:cover {\"url\":" +
+                $"\"{first.Url}\"," +
+                "\"alt\":\"トップ画像\",\"dimRatio\":10,\"focalPoint\":{\"x\":0.5,\"y\":0.95},\"minHeight\":840,\"minHeightUnit\":\"px\",\"contentPosition\":" +
+                "\"bottom center\",\"align\":\"full\",\"style\":{\"spacing\":{\"padding\":{\"top\":\"var:preset|spacing|50\",\"bottom\":\"var:preset|spacing|50\",\"left\":\"var:preset|spacing|50\"," +
+                "\"right\":\"var:preset|spacing|50\"},\"margin\":{\"top\":\"0\",\"bottom\":\"0\"}}},\"layout\":{\"type\":\"constrained\"}} -->");
+
+            sb.AppendLine("<div class=\"wp-block-cover alignfull has-custom-content-position is-position-bottom-center\" " +
+                "style=\"margin-top:0;margin-bottom:0;padding-top:var(--wp--preset--spacing--50);padding-right:var(--wp--preset--spacing--50);" +
+                "padding-bottom:var(--wp--preset--spacing--50);padding-left:var(--wp--preset--spacing--50);min-height:840px\">" +
+                "<span aria-hidden=\"true\" class=\"wp-block-cover__background has-background-dim-10 has-background-dim\"></span>" +
+                "<img class=\"wp-block-cover__image-background\" alt=\"トップ画像\" " +
+                $"src=\"{first.Url}\" " +
+                "style=\"object-position:50% 95%\" data-object-fit=\"cover\" data-object-position=\"50% 95%\"/>" +
+                "<div class=\"wp-block-cover__inner-container\"><!-- wp:group {\"align\":\"wide\",\"layout\":{\"type\":\"constrained\",\"justifyContent\":\"left\"}} -->");
+            sb.AppendLine("<div class=\"wp-block-group alignwide\"><!-- wp:heading {\"textAlign\":\"left\",\"fontSize\":\"xx-large\"} -->");
+            sb.AppendLine("<h2 class=\"wp-block-heading has-text-align-left has-xx-large-font-size\">Civitai速報！週間イメージランキング</h2>");
+            sb.AppendLine("<!-- /wp:heading -->");
+
+            sb.AppendLine("");
+            sb.AppendLine("<!-- wp:paragraph -->");
+            sb.AppendLine("<p>直近1週間で最も反応があったAI生成画像を集めました</p>");
+            sb.AppendLine($"<p>更新日{DateTime.Today.ToString("yyyy/MM/dd(ddd)")}</p>");
+            sb.AppendLine("<!-- /wp:paragraph -->");
+            sb.AppendLine("");
+
+
+            sb.AppendLine("<!-- wp:buttons -->");
+            sb.AppendLine("<div class=\"wp-block-buttons\"><!-- wp:button -->");
+            sb.AppendLine("<div class=\"wp-block-button\"><a class=\"wp-block-button__link wp-element-button\" href=\"https://civitai.com/\">Civitai</a></div>");
+            sb.AppendLine("<!-- /wp:button --></div>");
+            sb.AppendLine("<!-- /wp:buttons --></div>");
+            sb.AppendLine("<!-- /wp:group --></div></div>");
+            sb.AppendLine("<!-- /wp:cover -->");
+            sb.AppendLine("");
+
+            int i = 1;
+            foreach (var item in this.SearchResults.Items)
+            {
+                string style = i % 2 == 0 ? "is-style-section-5" : "is-style-default";
+                sb.AppendLine("<!-- wp:group {\"align\":\"full\",\"className\":" +
+                    $"\"{style}\"" +
+                    ",\"style\":{\"spacing\":{\"padding\":{\"top\":\"var:preset|spacing|50\",\"bottom\":\"var:preset|spacing|50\"},\"margin\":{\"top\":\"0\",\"bottom\":\"0\"}}},\"layout\":{\"type\":\"constrained\"}} -->");
+                sb.AppendLine($"<div class=\"wp-block-group alignfull {style}\" " +
+                    "style=\"margin-top:0;margin-bottom:0;padding-top:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--50)\">" +
+                    "<!-- wp:columns {\"align\":\"wide\",\"style\":{\"spacing\":{\"blockGap\":{\"top\":\"var:preset|spacing|60\",\"left\":\"var:preset|spacing|80\"}}}} -->");
+                sb.AppendLine("<div class=\"wp-block-columns alignwide\"><!-- wp:column {\"verticalAlignment\":\"center\",\"width\":\"50%\"} -->");
+                sb.AppendLine("<div class=\"wp-block-column is-vertically-aligned-center\" style=\"flex-basis:50%\"><!-- wp:heading {\"className\":\"wp-block-heading\"} -->");
+                sb.AppendLine("");
+                sb.AppendLine($"<h2 class=\"wp-block-heading\">No.{i++}   作者 {item.Username}</h2>");
+                sb.AppendLine("<!-- /wp:heading -->");
+                sb.AppendLine("");
+                sb.AppendLine("");
+
+                if (item.Meta != null)
+                {
+                    if (!string.IsNullOrEmpty(item.Meta.Prompt))
+                    {
+                        sb.AppendLine($"<!-- wp:loos-hcb/code-block {{\"langType\":\"prompt\",\"langName\":\"Prompt\"}} -->");
+                        sb.AppendLine($"<div class=\"hcb_wrap\"><pre class=\"prism undefined-numbers lang-prompt\" data-lang=\"Prompt\">");
+                        sb.AppendLine($"<code>{item.Meta.Prompt.HtmlCodeEscape()}</code>");
+                        sb.AppendLine($"</pre></div>");
+                        sb.AppendLine($"<!-- /wp:loos-hcb/code-block -->");
+                        sb.AppendLine("");
+                    }
+                    if (!string.IsNullOrEmpty(item.Meta.NegativePrompt))
+                    {
+                        sb.AppendLine($"<!-- wp:loos-hcb/code-block {{\"langType\":\"negativeprompt\",\"langName\":\"Negative Prompt\"}} -->");
+                        sb.AppendLine($"<div class=\"hcb_wrap\"><pre class=\"prism undefined-numbers lang-negativeprompt\" data-lang=\"Negative Prompt\">");
+                        sb.AppendLine($"<code>{item.Meta.NegativePrompt.HtmlCodeEscape()}</code>");
+                        sb.AppendLine($"</pre></div>");
+                        sb.AppendLine($"<!-- /wp:loos-hcb/code-block -->");
+                        sb.AppendLine("");
+                    }
+
+                    if (!string.IsNullOrEmpty(item.Meta.Model))
+                    {
+                        sb.AppendLine("<!-- wp:paragraph -->");
+                        sb.AppendLine($"<p>モデル:{item.Meta.Model}</p>");
+                        sb.AppendLine("<!-- /wp:paragraph -->");
+                        sb.AppendLine("");
+
+                    }
+                    sb.AppendLine("");
+
+                }
+                else
+                {
+                    sb.AppendLine("<!-- wp:paragraph {\"fontSize\":\"medium\"} -->");
+                    sb.AppendLine("<p class=\"has-medium-font-size\">メタデータが存在しませんでした。</p>");
+                    sb.AppendLine("<!-- /wp:paragraph -->");
+                }
+                sb.AppendLine("</div>");
+
+                sb.AppendLine("<!-- /wp:column -->");
+                sb.AppendLine("");
+                sb.AppendLine("<!-- wp:column {\"verticalAlignment\":\"center\",\"width\":\"50%\",\"layout\":{\"type\":\"default\"}} -->");
+                sb.AppendLine("<div class=\"wp-block-column is-vertically-aligned-center\" style=\"flex-basis:50%\">");
+
+                string ext = System.IO.Path.GetExtension(item.Url).ToLower();
+                if (ext.Equals(".mp4"))
+                {
+                    sb.AppendLine($"<!-- wp:video -->");
+                    sb.AppendLine($"<figure class=\"wp-block-video\"><video controls src=\"{item.Url}\"></video></figure>");
+                    sb.AppendLine($"<!-- /wp:video -->");
+                }
+                else
+                {
+
+                    sb.AppendLine($"<!-- wp:image {{\"aspectRatio\":\"1\",\"scale\":\"cover\",\"sizeSlug\":\"full\"}} -->");
+                    sb.AppendLine($"<figure class=\"wp-block-image size-full\"><img src=\"{item.Url}\" alt=\"{item.Url}\" style=\"aspect-ratio:1;object-fit:cover\"/></figure>");
+                    sb.AppendLine($"<!-- /wp:image -->");
+                }
+
+                sb.AppendLine("</div>");
+                sb.AppendLine("<!-- /wp:column --></div>");
+                sb.AppendLine("<!-- /wp:columns --></div>");
+                sb.AppendLine("<!-- /wp:group -->");
+                sb.AppendLine("");
+            }
+
+
+            sb.AppendLine("");
+            sb.AppendLine("");
+
+
+
             return sb.ToString();
         }
         #endregion
