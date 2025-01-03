@@ -58,13 +58,33 @@ namespace WPManager.Models.GitHub
         }
         #endregion
 
-
+        #region 記事の作成処理
+        /// <summary>
+        /// 記事の作成処理
+        /// </summary>
+        /// <returns>記事</returns>
+        protected override string GetArticle()
+        {
+            switch (this.ArticleType)
+            {
+                case GitHubArticleType.Type1:
+                default:
+                    {
+                        return GetArticleType1();
+                    }
+                case GitHubArticleType.Type2:
+                    {
+                        return GetArticleType2();
+                    }
+            }
+        }
+        #endregion
         #region 記事作成処理
         /// <summary>
         /// 記事作成処理
         /// </summary>
         /// <returns>記事</returns>
-        protected override string GetArticle()
+        protected string GetArticleType1()
         {
             DateTime startDt = this.SearchCondition.SearchFrom;
             DateTime endDt = this.SearchCondition.SearchTo;
@@ -105,6 +125,96 @@ namespace WPManager.Models.GitHub
         }
         #endregion
 
+        public string GetArticleType2()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("<!-- wp:group {\"metadata\":{\"categories\":[\"twentytwentyfive_page\"],\"patternName\":\"core/block/421\",\"name\":\"WPManagerテンプレート\"},\"align\":\"full\",\"style\":{\"spacing\":{\"padding\":{\"top\":\"var:preset|spacing|50\",\"bottom\":\"var:preset|spacing|50\"},\"margin\":{\"top\":\"0\",\"bottom\":\"0\"}}},\"layout\":{\"type\":\"constrained\"}} -->");
+            sb.AppendLine("<div class=\"wp-block-group alignfull\" style=\"margin-top:0;margin-bottom:0;padding-top:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--50)\">");
+            sb.AppendLine("<!-- wp:group {\"align\":\"wide\",\"layout\":{\"type\":\"default\"}} -->");
+            sb.AppendLine("<div class=\"wp-block-group alignwide\"><!-- wp:heading -->");
+            sb.AppendLine("<h2 class=\"wp-block-heading\">GitHub人気言語ランキング</h2>");
+            sb.AppendLine("<!-- /wp:heading -->");
+            sb.AppendLine("");
+            sb.AppendLine(BlogSearchCondition());
+            sb.AppendLine("");
+            sb.AppendLine("<!-- wp:group {\"style\":{\"spacing\":{\"blockGap\":\"0\",\"margin\":{\"top\":\"var:preset|spacing|70\"}}},\"layout\":{\"type\":\"default\"}} -->");
+            sb.AppendLine("<div class=\"wp-block-group\" style=\"margin-top:var(--wp--preset--spacing--70)\">");
+
+            var summary = (from x in this.SearchResults
+                           group x by x.Language into g
+                           select new
+                           {
+                               Language = g.Key,
+                               StargazersCount = g.Sum(x => x.StargazersCount)
+                           }).OrderByDescending(x => x.StargazersCount);
+
+            int max = summary.Count();
+            for (int i = 0; i < max; i ++)
+            {
+                var item = summary.ElementAt(i);
+                string text = BlogListItem(i+1, item.Language, item.StargazersCount);
+                sb.AppendLine(text);
+
+                if (i + 1 == max)
+                {
+                    sb.AppendLine("</div>");
+                }
+            }
+
+            sb.AppendLine("<!-- /wp:group --></div>");
+            sb.AppendLine("<!-- /wp:group --></div>");
+            sb.AppendLine("<!-- /wp:group -->");
+
+            return sb.ToString();
+
+        }
+
+        private string BlogSearchCondition()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("<!-- wp:paragraph --> ");
+            DateTime startDt = this.SearchCondition.SearchFrom;
+            DateTime endDt = this.SearchCondition.SearchTo;
+            sb.Append($"<p>調査対象 {startDt.ToString("yyyy/MM/dd")} - {endDt.ToString("yyyy/MM/dd")}, リポジトリ数 {this.SearchResults.Count()}, スター獲得数順</p> ");
+            sb.Append("<!-- /wp:paragraph --> ");
+            return sb.ToString();
+
+        }
+
+        private string BlogListItem(int rank, string language, int starCnt)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("<!-- wp:group {\"style\":{\"spacing\":{\"padding\":{\"top\":\"var:preset|spacing|40\",\"bottom\":\"var:preset|spacing|40\"}},\"border\":{\"top\":{\"color\":\"var:preset|color|accent-6\",\"width\":\"1px\"}}},\"layout\":{\"type\":\"flex\",\"flexWrap\":\"wrap\",\"justifyContent\":\"space-between\"}} -->");
+            sb.AppendLine("<div class=\"wp-block-group\" style=\"border-top-color:var(--wp--preset--color--accent-6);border-top-width:1px;padding-top:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--40)\">");
+            sb.AppendLine("<!-- wp:group {\"layout\":{\"type\":\"constrained\"}} -->");
+            sb.AppendLine("<div class=\"wp-block-group\"><!-- wp:heading {\"level\":3} -->");
+
+            string lang = string.IsNullOrEmpty(language) ? "不明" : language;
+
+            sb.AppendLine($"<h3 class=\"wp-block-heading\">{lang}</h3>");
+            sb.AppendLine("<!-- /wp:heading -->");
+            sb.AppendLine("");
+            sb.AppendLine("<!-- wp:paragraph -->");
+            sb.AppendLine($"<p>スター獲得数 : {starCnt}</p>");
+            sb.AppendLine("<!-- /wp:paragraph --></div>");
+            sb.AppendLine("<!-- /wp:group -->");
+            sb.AppendLine("");
+            sb.AppendLine("<!-- wp:group {\"style\":{\"spacing\":{\"blockGap\":\"var:preset|spacing|70\"}},\"layout\":{\"type\":\"flex\",\"flexWrap\":\"wrap\",\"justifyContent\":\"space-between\"}} -->");
+            sb.AppendLine("<div class=\"wp-block-group\"><!-- wp:paragraph {\"style\":{\"typography\":{\"textTransform\":\"uppercase\"}}} -->");
+            sb.AppendLine($"<p style=\"text-transform:uppercase\">{rank}位</p>");
+            sb.AppendLine("<!-- /wp:paragraph -->");
+            sb.AppendLine("");
+            sb.AppendLine("<!-- wp:buttons -->");
+            sb.AppendLine("<div class=\"wp-block-buttons\"><!-- wp:button {\"fontSize\":\"small\"} -->");
+            sb.AppendLine("<div class=\"wp-block-button has-custom-font-size has-small-font-size\"><a class=\"wp-block-button__link wp-element-button\" " +
+                $"href=\"https://www.google.co.jp/search?q={lang}\">" +
+                "Google検索</a></div>");
+            sb.AppendLine("<!-- /wp:button --></div>");
+            sb.AppendLine("<!-- /wp:buttons --></div>");
+            sb.AppendLine("<!-- /wp:group --></div>");
+            sb.AppendLine("<!-- /wp:group -->");
+            return sb.ToString();
+        }
 
         #region スラッグを作成する
         /// <summary>
