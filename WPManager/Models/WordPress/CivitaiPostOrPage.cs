@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WPManager.Models.Civitai.Enums
+namespace WPManager.Models.WordPress
 {
-    public enum CivitaiPostOrPage
+    public enum PostOrPage
     {
         /// <summary>
         /// 記事

@@ -5,7 +5,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using WPManager.Models.Civitai;
-using WPManager.Models.Civitai.Enums;
+using WPManager.Models.WordPress;
 
 namespace WPManager.Models
 {
@@ -15,11 +15,11 @@ namespace WPManager.Models
         /// <summary>
         /// ブログタイプ
         /// </summary>
-        CivitaiPostOrPage _PostOrPage = CivitaiPostOrPage.Post;
+        PostOrPage _PostOrPage = PostOrPage.Post;
         /// <summary>
         /// ブログタイプ
         /// </summary>
-        public CivitaiPostOrPage PostOrPage
+        public PostOrPage PostOrPage
         {
             get
             {
@@ -71,7 +71,7 @@ namespace WPManager.Models
         {
             Task.Run(() =>
             {
-                if (this.PostOrPage == CivitaiPostOrPage.Post)
+                if (this.PostOrPage == PostOrPage.Post)
                 {
                     wpParam.CreateOrUpdatePost(this.Article).Wait();
                 }

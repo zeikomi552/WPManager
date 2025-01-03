@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:WPManager.Views.UserControls"
              xmlns:my="clr-namespace:WPManager.Common.Utilites"
              xmlns:enum="clr-namespace:WPManager.Models.Civitai.Enums"
+             xmlns:cenum="clr-namespace:WPManager.Models.WordPress"
              xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:vm="clr-namespace:WPManager.ViewModels.UserControls"
              d:DataContext="{d:DesignInstance Type={x:Type vm:ucCivitaiImageVViewModel}}"
@@ -46,7 +47,7 @@
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                         <TextBlock Width="auto" TextAlignment="Right" VerticalAlignment="Center" Margin="5" Text="記事 or 固定ページ"/>
                         <TextBlock VerticalAlignment="Center" Margin="5" Text=":"/>
-                        <ComboBox Margin="5" Width="80" ItemsSource="{Binding Mode=OneWay, Source={my:Enumeration {x:Type enum:CivitaiPostOrPage}}}"
+                        <ComboBox Margin="5" Width="80" ItemsSource="{Binding Mode=OneWay, Source={my:Enumeration {x:Type cenum:PostOrPage}}}"
                                               SelectedValue="{Binding BlogManager.PostOrPage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                                               DisplayMemberPath="Description" SelectedValuePath="Value"  />
                     </StackPanel>

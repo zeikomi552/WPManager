@@ -7,11 +7,38 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WPManager.Common.Extensions;
+using WPManager.Models.Civitai.Enums;
+using WPManager.Models.GitHub.Enums;
 
 namespace WPManager.Models.GitHub
 {
     public class GitHubBolgLanguageManagerM : GitHubBlogManagerBaseM
     {
+        #region ブログタイプ
+        /// <summary>
+        /// ブログタイプ
+        /// </summary>
+        GitHubArticleType _ArticleType = GitHubArticleType.Type1;
+        /// <summary>
+        /// ブログタイプ
+        /// </summary>
+        public GitHubArticleType ArticleType
+        {
+            get
+            {
+                return _ArticleType;
+            }
+            set
+            {
+                if (!_ArticleType.Equals(value))
+                {
+                    _ArticleType = value;
+                    RaisePropertyChanged("ArticleType");
+                }
+            }
+        }
+        #endregion
+
         #region 検索処理
         /// <summary>
         /// 検索処理
