@@ -172,15 +172,39 @@ namespace WPManager.Models.Civitai
         }
         #endregion
 
-        #region タイトルの作成処理
+        #region タイトルの取得
         /// <summary>
-        /// タイトルの作成処理
+        /// タイトルの取得
         /// </summary>
-        /// <returns>タイトル</returns>
+        /// <returns>タイトルの取得</returns>
         private string GetTitle()
         {
-            string title = string.Empty;
+            switch (this.ArticleType)
+            {
+                case CivitaiArticleType.Type1:
+                    {
+                        return GetTitleSub();
+                    }
+                case CivitaiArticleType.Type2:
+                    {
+                        return $"{GetPeriod()} Civitaiイメージランキング";
+                    }
+                default:
+                    {
+                        return GetTitleSub();
+                    }
+            }
 
+        }
+        #endregion
+
+        #region 期間の取得
+        /// <summary>
+        /// 期間の取得
+        /// </summary>
+        /// <returns>期間文字列</returns>
+        private string GetPeriod()
+        {
             string period = "全期間";
             if (this.SearchCondition.Period.HasValue)
             {
@@ -214,6 +238,21 @@ namespace WPManager.Models.Civitai
                         }
                 }
             }
+            return period;
+        }
+        #endregion
+
+        #region タイトルの作成処理
+        /// <summary>
+        /// タイトルの作成処理
+        /// </summary>
+        /// <returns>タイトル</returns>
+        private string GetTitleSub()
+        {
+            string title = string.Empty;
+
+            string period = GetPeriod();
+           
 
             title = ($"{DateTime.Today.Year}年版 CIVITAI人気画像速報！{period}スター獲得数ランキング");
 
@@ -385,13 +424,21 @@ namespace WPManager.Models.Civitai
                 "style=\"object-position:50% 95%\" data-object-fit=\"cover\" data-object-position=\"50% 95%\"/>" +
                 "<div class=\"wp-block-cover__inner-container\"><!-- wp:group {\"align\":\"wide\",\"layout\":{\"type\":\"constrained\",\"justifyContent\":\"left\"}} -->");
             sb.AppendLine("<div class=\"wp-block-group alignwide\"><!-- wp:heading {\"textAlign\":\"left\",\"fontSize\":\"xx-large\"} -->");
-            sb.AppendLine("<h2 class=\"wp-block-heading has-text-align-left has-xx-large-font-size\">Civitai速報！週間イメージランキング</h2>");
+            sb.AppendLine("<h2 class=\"wp-block-heading has-text-align-left has-xx-large-font-size\">" +
+                $"Civitai速報！{GetPeriod()}イメージランキング" +
+                "</h2>");
             sb.AppendLine("<!-- /wp:heading -->");
 
             sb.AppendLine("");
             sb.AppendLine("<!-- wp:paragraph -->");
-            sb.AppendLine("<p>直近1週間で最も反応があったAI生成画像を集めました</p>");
-            sb.AppendLine($"<p>更新日{DateTime.Today.ToString("yyyy/MM/dd(ddd)")}</p>");
+            sb.AppendLine("<p>直近で最も反応があったAI生成画像を集めました</p>");
+
+            DateTime start = (from x in this.SearchResults.Items
+                              select x.CreatedAt).Min();
+            DateTime end = (from x in this.SearchResults.Items
+                              select x.CreatedAt).Max();
+            sb.AppendLine($"対象期間 {start.ToString("yyyy/MM/dd")} ～ {end.ToString("yyyy/MM/dd")}");
+            sb.AppendLine($"更新日 {DateTime.Today.ToString("yyyy/MM/dd(ddd)")}");
             sb.AppendLine("<!-- /wp:paragraph -->");
             sb.AppendLine("");
 
@@ -422,7 +469,10 @@ namespace WPManager.Models.Civitai
                 sb.AppendLine("<!-- /wp:heading -->");
                 sb.AppendLine("");
                 sb.AppendLine("");
-
+                sb.AppendLine("<!-- wp:paragraph -->");
+                sb.AppendLine($"<p>作成日:{item.CreatedAt.ToString("yyyy/MM/dd")}</p>");
+                sb.AppendLine("<!-- /wp:paragraph -->");
+                sb.AppendLine("");
                 if (item.Meta != null)
                 {
                     if (!string.IsNullOrEmpty(item.Meta.Prompt))

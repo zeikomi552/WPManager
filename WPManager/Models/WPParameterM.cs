@@ -172,7 +172,8 @@ namespace WPManager.Models
                 Excerpt = new Excerpt(wpObject.Excerpt),
                 Content = new Content(wpObject.Content),
                 //slug should be in lower case with hypen(-) separator 
-                Slug = wpObject.Slug
+                Slug = wpObject.Slug,
+                Date = DateTime.Now,
             };
 
             if (wpObject.PostId == 0)
