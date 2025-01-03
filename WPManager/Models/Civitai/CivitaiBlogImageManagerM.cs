@@ -502,8 +502,6 @@ namespace WPManager.Models.Civitai
                         sb.AppendLine("");
 
                     }
-                    sb.AppendLine("");
-
                 }
                 else
                 {
@@ -511,6 +509,15 @@ namespace WPManager.Models.Civitai
                     sb.AppendLine("<p class=\"has-medium-font-size\">メタデータが存在しませんでした。</p>");
                     sb.AppendLine("<!-- /wp:paragraph -->");
                 }
+                sb.AppendLine("<!-- wp:buttons -->");
+                sb.AppendLine("<div class=\"wp-block-buttons\"><!-- wp:button {\"fontSize\":\"small\"} -->");
+                sb.AppendLine("<div class=\"wp-block-button has-custom-font-size has-small-font-size\"><a class=\"wp-block-button__link wp-element-button\" " +
+                    $"href=\"{item.ImageURL}\">" +
+                    "Civitai</a></div>");
+                sb.AppendLine("<!-- /wp:button --></div>");
+                sb.AppendLine("<!-- /wp:buttons -->");
+                sb.AppendLine("");
+
                 sb.AppendLine("</div>");
 
                 sb.AppendLine("<!-- /wp:column -->");
