@@ -331,11 +331,11 @@ namespace WPManager.Models.Civitai
         {
             var first = this.SearchResults.Items.ElementAt(0);
             var first_model = first.ModelVersions.FirstOrDefault();
-            var first_image = first_model.Images.FirstOrDefault();
+            var first_image = first_model!.Images.FirstOrDefault();
 
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("<!-- wp:cover {\"url\":" +
-                $"\"{first_image.Url}\"," +
+                $"\"{first_image!.Url}\"," +
                 "\"alt\":\"トップ画像\",\"dimRatio\":10,\"focalPoint\":{\"x\":0.5,\"y\":0.15},\"minHeight\":840,\"minHeightUnit\":\"px\",\"contentPosition\":" +
                 "\"bottom center\",\"align\":\"full\",\"style\":{\"spacing\":{\"padding\":{\"top\":\"var:preset|spacing|50\",\"bottom\":\"var:preset|spacing|50\",\"left\":\"var:preset|spacing|50\"," +
                 "\"right\":\"var:preset|spacing|50\"},\"margin\":{\"top\":\"0\",\"bottom\":\"0\"}}},\"layout\":{\"type\":\"constrained\"}} -->");
@@ -356,7 +356,7 @@ namespace WPManager.Models.Civitai
 
             sb.AppendLine("");
             sb.AppendLine("<!-- wp:paragraph -->");
-            sb.AppendLine("<p>直近で最も反応があったAI生成画像を集めました</p>");
+            sb.AppendLine("<p>直近で最もダウンロードされたモデル(Checkpoint)を集めました。</p>");
 
             //DateTime start = (from x in this.SearchResults.Items
             //                  select x.).Min();
@@ -378,6 +378,7 @@ namespace WPManager.Models.Civitai
             sb.AppendLine("");
 
             int i = 1;
+            int imageid = 1;
             foreach (var item in this.SearchResults.Items)
             {
                 var curr_model = item.ModelVersions.FirstOrDefault();
@@ -401,52 +402,18 @@ namespace WPManager.Models.Civitai
                 sb.AppendLine("");
                 sb.AppendLine("<!-- wp:paragraph -->");
                 string date_txt = curr_model.PublishedAt.HasValue ? curr_model.PublishedAt.Value.ToString("yyyy/MM/dd") : string.Empty;
-                sb.AppendLine($"<p>作成日:{date_txt}</p>");
+                sb.AppendLine($"作成日:{date_txt}<br>");
+                sb.AppendLine($"モデル名:{item.Name}<br>");
+                sb.AppendLine($"モデルバージョン:{curr_model.Name}<br>");
                 sb.AppendLine("<!-- /wp:paragraph -->");
                 sb.AppendLine("");
 
                 var image = curr_model.Images.FirstOrDefault();
 
-                if (image != null)
-                {
-                    if (!string.IsNullOrEmpty(image.Meta.Prompt))
-                    {
-                        sb.AppendLine($"<!-- wp:loos-hcb/code-block {{\"langType\":\"prompt\",\"langName\":\"Prompt\"}} -->");
-                        sb.AppendLine($"<div class=\"hcb_wrap\"><pre class=\"prism undefined-numbers lang-prompt\" data-lang=\"Prompt\">");
-                        sb.AppendLine($"<code>{image.Meta.Prompt.HtmlCodeEscape()}</code>");
-                        sb.AppendLine($"</pre></div>");
-                        sb.AppendLine($"<!-- /wp:loos-hcb/code-block -->");
-                        sb.AppendLine("");
-                    }
-                    if (!string.IsNullOrEmpty(image.Meta.NegativPrompt))
-                    {
-                        sb.AppendLine($"<!-- wp:loos-hcb/code-block {{\"langType\":\"negativeprompt\",\"langName\":\"Negative Prompt\"}} -->");
-                        sb.AppendLine($"<div class=\"hcb_wrap\"><pre class=\"prism undefined-numbers lang-negativeprompt\" data-lang=\"Negative Prompt\">");
-                        sb.AppendLine($"<code>{image.Meta.NegativPrompt.HtmlCodeEscape()}</code>");
-                        sb.AppendLine($"</pre></div>");
-                        sb.AppendLine($"<!-- /wp:loos-hcb/code-block -->");
-                        sb.AppendLine("");
-                    }
-
-                    if (!string.IsNullOrEmpty(image.Meta.Model))
-                    {
-                        sb.AppendLine("<!-- wp:paragraph -->");
-                        sb.AppendLine($"<p>モデル:{image.Meta.Model}</p>");
-                        sb.AppendLine("<!-- /wp:paragraph -->");
-                        sb.AppendLine("");
-
-                    }
-                }
-                else
-                {
-                    sb.AppendLine("<!-- wp:paragraph {\"fontSize\":\"medium\"} -->");
-                    sb.AppendLine("<p class=\"has-medium-font-size\">メタデータが存在しませんでした。</p>");
-                    sb.AppendLine("<!-- /wp:paragraph -->");
-                }
                 sb.AppendLine("<!-- wp:buttons -->");
                 sb.AppendLine("<div class=\"wp-block-buttons\"><!-- wp:button {\"fontSize\":\"small\"} -->");
                 sb.AppendLine("<div class=\"wp-block-button has-custom-font-size has-small-font-size\"><a class=\"wp-block-button__link wp-element-button\" " +
-                    $"href=\"https://civitai.com/models/{curr_model.Id}\">" +
+                    $"href=\"https://civitai.com/models/{item.Id}/flux?modelVersionId={curr_model.Id}\">" +
                     "Civitai</a></div>");
                 sb.AppendLine("<!-- /wp:button --></div>");
                 sb.AppendLine("<!-- /wp:buttons -->");
@@ -459,35 +426,34 @@ namespace WPManager.Models.Civitai
                 sb.AppendLine("<!-- wp:column {\"verticalAlignment\":\"center\",\"width\":\"50%\",\"layout\":{\"type\":\"default\"}} -->");
                 sb.AppendLine("<div class=\"wp-block-column is-vertically-aligned-center\" style=\"flex-basis:50%\">");
 
-                if (image != null)
-                {
-                    string ext = System.IO.Path.GetExtension(image.Url).ToLower();
-                    if (ext.Equals(".mp4"))
-                    {
-                        sb.AppendLine($"<!-- wp:video -->");
-                        sb.AppendLine($"<figure class=\"wp-block-video\"><video controls src=\"{image.Url}\"></video></figure>");
-                        sb.AppendLine($"<!-- /wp:video -->");
-                    }
-                    else
-                    {
 
-                        sb.AppendLine($"<!-- wp:image {{\"aspectRatio\":\"1\",\"scale\":\"cover\",\"sizeSlug\":\"full\"}} -->");
-                        sb.AppendLine($"<figure class=\"wp-block-image size-full\"><img src=\"{image.Url}\" alt=\"{image.Url}\" style=\"aspect-ratio:1;object-fit:cover\"/></figure>");
-                        sb.AppendLine($"<!-- /wp:image -->");
-                    }
+                sb.AppendLine($"<!-- wp:gallery {{\"linkTo\":\"none\"}} -->");
+                sb.AppendLine($"<figure class=\"wp-block-gallery has-nested-images columns-default is-cropped\">");
+
+                int count = 0;
+                foreach (var tmp in curr_model.Images)
+                {
+                    sb.AppendLine($"<!-- wp:image {{\"id\":{imageid},\"sizeSlug\":\"large\",\"linkDestination\":\"none\"}} -->");
+                    sb.AppendLine($"<figure class=\"wp-block-image size-large\">");
+                    sb.AppendLine($"<img src=\"{tmp.Url}\" alt=\"\" class=\"wp-image-{imageid}\"/>");
+                    sb.AppendLine($"</figure>");
+                    sb.AppendLine($"<!-- /wp:image -->");
+
+                    if (count == 5)
+                        break;
+
+                    count++;
                 }
+                sb.AppendLine($"</figure>");
+                sb.AppendLine($"<!-- /wp:gallery -->");
                 sb.AppendLine("</div>");
                 sb.AppendLine("<!-- /wp:column --></div>");
                 sb.AppendLine("<!-- /wp:columns --></div>");
                 sb.AppendLine("<!-- /wp:group -->");
                 sb.AppendLine("");
             }
-
-
             sb.AppendLine("");
             sb.AppendLine("");
-
-
 
             return sb.ToString();
         }
