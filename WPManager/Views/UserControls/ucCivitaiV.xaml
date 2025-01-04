@@ -10,9 +10,8 @@
              xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:vm="clr-namespace:WPManager.ViewModels.UserControls"
              d:DataContext="{d:DesignInstance Type={x:Type vm:ucCivitaiVViewModel}}"
-
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="800" d:DesignWidth="1200" Background="{DynamicResource MahApps.Brushes.Control.Background}">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>

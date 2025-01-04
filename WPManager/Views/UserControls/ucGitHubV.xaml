@@ -10,43 +10,50 @@
              xmlns:vm="clr-namespace:WPManager.ViewModels.UserControls"
              d:DataContext="{d:DesignInstance Type={x:Type vm:ucGitHubVViewModel}}"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="800" d:DesignWidth="1200" Background="{DynamicResource MahApps.Brushes.Control.Background}">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <GroupBox Margin="5" Header="検索条件">
-            <StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Margin="5" VerticalAlignment="Center" Text="製品名(任意)"/>
-                    <TextBox Margin="5" VerticalAlignment="Center" Width="200" Text="{Binding BlogManager.GitHubParameter.ProductName}"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Margin="5" VerticalAlignment="Center" Text="アクセストークン"/>
-                    <TextBox Margin="5" VerticalAlignment="Center" Width="200" Text="{Binding BlogManager.GitHubParameter.AccessToken}"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Margin="5" VerticalAlignment="Center" Text="日付範囲"/>
-                    <DatePicker Margin="5" VerticalAlignment="Center" SelectedDate="{Binding BlogManager.SearchCondition.SearchFrom}"/>
-                    <TextBlock Margin="5" VerticalAlignment="Center" Text=" - "/>
-                    <DatePicker Margin="5" VerticalAlignment="Center" SelectedDate="{Binding BlogManager.SearchCondition.SearchTo}"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Width="85" TextAlignment="Right" Margin="5" VerticalAlignment="Center" Text="開発言語"/>
-                    <TextBlock Margin="5" VerticalAlignment="Center" Text=":"/>
-                    <ComboBox Width="100" ItemsSource="{Binding Mode=OneWay, Source={my:Enumeration {x:Type enum:Language}}}"
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <WrapPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Margin="5" VerticalAlignment="Center" Text="製品名(任意)"/>
+                        <TextBox Margin="5" VerticalAlignment="Center" Width="200" Text="{Binding BlogManager.GitHubParameter.ProductName}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Margin="5" VerticalAlignment="Center" Text="アクセストークン"/>
+                        <TextBox Margin="5" VerticalAlignment="Center" Width="200" Text="{Binding BlogManager.GitHubParameter.AccessToken}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Margin="5" VerticalAlignment="Center" Text="日付範囲"/>
+                        <DatePicker Margin="5" VerticalAlignment="Center" SelectedDate="{Binding BlogManager.SearchCondition.SearchFrom}"/>
+                        <TextBlock Margin="5" VerticalAlignment="Center" Text=" - "/>
+                        <DatePicker Margin="5" VerticalAlignment="Center" SelectedDate="{Binding BlogManager.SearchCondition.SearchTo}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Width="85" TextAlignment="Right" Margin="5" VerticalAlignment="Center" Text="開発言語"/>
+                        <TextBlock Margin="5" VerticalAlignment="Center" Text=":"/>
+                        <ComboBox Width="100" ItemsSource="{Binding Mode=OneWay, Source={my:Enumeration {x:Type enum:Language}}}"
                                               DisplayMemberPath="Description" SelectedValuePath="Value"
                                               SelectedValue="{Binding BlogManager.SearchCondition.SelectedLanguage}"/>
-                    <Button Margin="5" Content="クリア">
-                        <b:Interaction.Triggers>
-                            <b:EventTrigger EventName="Click">
-                                <b:CallMethodAction TargetObject="{Binding}" MethodName="LanguageClear"/>
-                            </b:EventTrigger>
-                        </b:Interaction.Triggers>
-                    </Button>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
+                        <Button Margin="5" Content="クリア">
+                            <b:Interaction.Triggers>
+                                <b:EventTrigger EventName="Click">
+                                    <b:CallMethodAction TargetObject="{Binding}" MethodName="LanguageClear"/>
+                                </b:EventTrigger>
+                            </b:Interaction.Triggers>
+                        </Button>
+                    </StackPanel>
+                    
+                </WrapPanel>
+                <StackPanel Grid.Row="1" Orientation="Horizontal">
                     <Button Margin="5" Width="100" Content="一覧取得">
                         <b:Interaction.Triggers>
                             <b:EventTrigger EventName="Click">
@@ -63,7 +70,7 @@
                     </Button>
 
                 </StackPanel>
-            </StackPanel>
+            </Grid>
         </GroupBox>
         
         <Grid Grid.Row="1" Margin="5">
