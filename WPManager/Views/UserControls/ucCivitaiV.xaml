@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:my="clr-namespace:WPManager.Common.Utilites"
              xmlns:enum="clr-namespace:WPManager.Models.Civitai.Enums"
+             xmlns:cenum="clr-namespace:WPManager.Models.WordPress"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WPManager.Views.UserControls"
              xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
@@ -49,6 +50,13 @@
                         <TextBlock VerticalAlignment="Center" Margin="5" Text=":"/>
                         <ComboBox Margin="5" Width="80" ItemsSource="{Binding Mode=OneWay, Source={my:Enumeration {x:Type enum:CivitaiArticleType}}}"
                                               SelectedValue="{Binding BlogManager.ArticleType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                              DisplayMemberPath="Description" SelectedValuePath="Value"  />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <TextBlock Width="auto" TextAlignment="Right" VerticalAlignment="Center" Margin="5" Text="記事 or 固定ページ"/>
+                        <TextBlock VerticalAlignment="Center" Margin="5" Text=":"/>
+                        <ComboBox Margin="5" Width="80" ItemsSource="{Binding Mode=OneWay, Source={my:Enumeration {x:Type cenum:PostOrPage}}}"
+                                              SelectedValue="{Binding BlogManager.PostOrPage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                                               DisplayMemberPath="Description" SelectedValuePath="Value"  />
                     </StackPanel>
                 </WrapPanel>
