@@ -24,9 +24,7 @@ namespace WPManager
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             // シングルトンクラスとして登録したい時
-            //containerRegistry.RegisterSingleton<IWPParameterM?, WPParameterM>();
             containerRegistry.RegisterSingleton<IGlobalConfigM?, GlobalConfigM>();
-            //containerRegistry.RegisterDialog<MediaPlayer, MediaPlayerViewModel>();
         }
 
         protected override void ConfigureViewModelLocator()
@@ -37,6 +35,7 @@ namespace WPManager
             ViewModelLocationProvider.Register<ucWordpressV, ucWordpressVViewModel>();
             ViewModelLocationProvider.Register<ucGitHubV, ucGitHubVViewModel>();
             ViewModelLocationProvider.Register<ucCivitaiV, ucCivitaiVViewModel>();
+            ViewModelLocationProvider.Register<ucScheduleV, ucScheduleVViewModel>();
         }
 
         protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
