@@ -7,49 +7,62 @@
              xmlns:b="http://schemas.microsoft.com/xaml/behaviors" x:Class="WPManager.Views.UserControls.ucWordpressV"
              xmlns:vm="clr-namespace:WPManager.ViewModels.UserControls"
              mc:Ignorable="d" d:DataContext="{d:DesignInstance Type={x:Type vm:ucWordpressVViewModel}}"
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="800" d:DesignWidth="1200" Background="{DynamicResource MahApps.Brushes.Control.Background}">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Margin="5" VerticalAlignment="Center" Text="EndPoint"/>
-                <TextBox Margin="5" VerticalAlignment="Center" Width="200" Text="{Binding WPParameter.EndpointUri}"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Margin="5" VerticalAlignment="Center" Text="Username"/>
-                <TextBox Margin="5" VerticalAlignment="Center" Width="200" Text="{Binding WPParameter.UserName}"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Margin="5" VerticalAlignment="Center" Text="Password"/>
-                <TextBox Margin="5" VerticalAlignment="Center" Width="200" Text="{Binding WPParameter.Password}"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <Button Margin="5" Width="100" Content="記事取得">
-                    <b:Interaction.Triggers>
-                        <b:EventTrigger EventName="Click">
-                            <b:CallMethodAction TargetObject="{Binding}" MethodName="GetAllPost"/>
-                        </b:EventTrigger>
-                    </b:Interaction.Triggers>
-                </Button>
-                <Button Margin="5" Width="100" Content="記事投稿">
-                    <b:Interaction.Triggers>
-                        <b:EventTrigger EventName="Click">
-                            <b:CallMethodAction TargetObject="{Binding}" MethodName="Post"/>
-                        </b:EventTrigger>
-                    </b:Interaction.Triggers>
-                </Button>
-            </StackPanel>
-        </StackPanel>
+        <GroupBox Header="検索条件" Margin="5">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <WrapPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Margin="5" VerticalAlignment="Center" Text="EndPoint"/>
+                        <TextBox Margin="5" VerticalAlignment="Center" Width="200" Text="{Binding WPParameter.EndpointUri}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Margin="5" VerticalAlignment="Center" Text="Username"/>
+                        <TextBox Margin="5" VerticalAlignment="Center" Width="200" Text="{Binding WPParameter.UserName}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Margin="5" VerticalAlignment="Center" Text="Password"/>
+                        <TextBox Margin="5" VerticalAlignment="Center" Width="200" Text="{Binding WPParameter.Password}"/>
+                    </StackPanel>
+                    
+                </WrapPanel>
+                <StackPanel Grid.Row="1" Orientation="Horizontal">
+                    <Button Margin="5" Width="100" Content="記事取得">
+                        <b:Interaction.Triggers>
+                            <b:EventTrigger EventName="Click">
+                                <b:CallMethodAction TargetObject="{Binding}" MethodName="GetAllPost"/>
+                            </b:EventTrigger>
+                        </b:Interaction.Triggers>
+                    </Button>
+                    <Button Margin="5" Width="100" Content="記事投稿">
+                        <b:Interaction.Triggers>
+                            <b:EventTrigger EventName="Click">
+                                <b:CallMethodAction TargetObject="{Binding}" MethodName="Post"/>
+                            </b:EventTrigger>
+                        </b:Interaction.Triggers>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </GroupBox>
         <Grid Grid.Row="1" Margin="5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <DataGrid IsReadOnly="True" ItemsSource="{Binding BlogArticle}" SelectedItem="{Binding SelectedBlogArticle}"/>
-            <TextBox Grid.Column="1" Text="{Binding SelectedBlogArticle.Content.Rendered}" />
+            <GroupBox Header="検索結果" Margin="5">
+                <DataGrid IsReadOnly="True" ItemsSource="{Binding BlogArticle}" SelectedItem="{Binding SelectedBlogArticle}"/>
+            </GroupBox>
+            <GroupBox Grid.Column="1" Header="投稿記事" Margin="5">
+                <TextBox Grid.Column="1" Text="{Binding SelectedBlogArticle.Content.Rendered}" />
+            </GroupBox>
         </Grid>
     </Grid>
 </UserControl>

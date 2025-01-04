@@ -10,101 +10,115 @@
              xmlns:vm="clr-namespace:WPManager.ViewModels.UserControls"
              d:DataContext="{d:DesignInstance Type={x:Type vm:ucGitHubVViewModel}}"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="800" d:DesignWidth="1200" Background="{DynamicResource MahApps.Brushes.Control.Background}">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Margin="5" VerticalAlignment="Center" Text="製品名(任意)"/>
-                <TextBox Margin="5" VerticalAlignment="Center" Width="200" Text="{Binding BlogManager.GitHubParameter.ProductName}"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Margin="5" VerticalAlignment="Center" Text="アクセストークン"/>
-                <TextBox Margin="5" VerticalAlignment="Center" Width="200" Text="{Binding BlogManager.GitHubParameter.AccessToken}"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Margin="5" VerticalAlignment="Center" Text="日付範囲"/>
-                <DatePicker Margin="5" VerticalAlignment="Center" SelectedDate="{Binding BlogManager.SearchCondition.SearchFrom}"/>
-                <TextBlock Margin="5" VerticalAlignment="Center" Text=" - "/>
-                <DatePicker Margin="5" VerticalAlignment="Center" SelectedDate="{Binding BlogManager.SearchCondition.SearchTo}"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Width="85" TextAlignment="Right" Margin="5" VerticalAlignment="Center" Text="開発言語"/>
-                <TextBlock Margin="5" VerticalAlignment="Center" Text=":"/>
-                <ComboBox Width="100" ItemsSource="{Binding Mode=OneWay, Source={my:Enumeration {x:Type enum:Language}}}"
+        <GroupBox Margin="5" Header="検索条件">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <WrapPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Margin="5" VerticalAlignment="Center" Text="製品名(任意)"/>
+                        <TextBox Margin="5" VerticalAlignment="Center" Width="200" Text="{Binding BlogManager.GitHubParameter.ProductName}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Margin="5" VerticalAlignment="Center" Text="アクセストークン"/>
+                        <TextBox Margin="5" VerticalAlignment="Center" Width="200" Text="{Binding BlogManager.GitHubParameter.AccessToken}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Margin="5" VerticalAlignment="Center" Text="日付範囲"/>
+                        <DatePicker Margin="5" VerticalAlignment="Center" SelectedDate="{Binding BlogManager.SearchCondition.SearchFrom}"/>
+                        <TextBlock Margin="5" VerticalAlignment="Center" Text=" - "/>
+                        <DatePicker Margin="5" VerticalAlignment="Center" SelectedDate="{Binding BlogManager.SearchCondition.SearchTo}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Width="85" TextAlignment="Right" Margin="5" VerticalAlignment="Center" Text="開発言語"/>
+                        <TextBlock Margin="5" VerticalAlignment="Center" Text=":"/>
+                        <ComboBox Width="100" ItemsSource="{Binding Mode=OneWay, Source={my:Enumeration {x:Type enum:Language}}}"
                                               DisplayMemberPath="Description" SelectedValuePath="Value"
                                               SelectedValue="{Binding BlogManager.SearchCondition.SelectedLanguage}"/>
-                <Button Margin="5" Content="クリア">
-                    <b:Interaction.Triggers>
-                        <b:EventTrigger EventName="Click">
-                            <b:CallMethodAction TargetObject="{Binding}" MethodName="LanguageClear"/>
-                        </b:EventTrigger>
-                    </b:Interaction.Triggers>
-                </Button>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <Button Margin="5" Width="100" Content="一覧取得">
-                    <b:Interaction.Triggers>
-                        <b:EventTrigger EventName="Click">
-                            <b:CallMethodAction TargetObject="{Binding}" MethodName="Search"/>
-                        </b:EventTrigger>
-                    </b:Interaction.Triggers>
-                </Button>
-                <Button Margin="5" Width="100" Content="記事投稿">
-                    <b:Interaction.Triggers>
-                        <b:EventTrigger EventName="Click">
-                            <b:CallMethodAction TargetObject="{Binding}" MethodName="Post"/>
-                        </b:EventTrigger>
-                    </b:Interaction.Triggers>
-                </Button>
+                        <Button Margin="5" Content="クリア">
+                            <b:Interaction.Triggers>
+                                <b:EventTrigger EventName="Click">
+                                    <b:CallMethodAction TargetObject="{Binding}" MethodName="LanguageClear"/>
+                                </b:EventTrigger>
+                            </b:Interaction.Triggers>
+                        </Button>
+                    </StackPanel>
+                    
+                </WrapPanel>
+                <StackPanel Grid.Row="1" Orientation="Horizontal">
+                    <Button Margin="5" Width="100" Content="一覧取得">
+                        <b:Interaction.Triggers>
+                            <b:EventTrigger EventName="Click">
+                                <b:CallMethodAction TargetObject="{Binding}" MethodName="Search"/>
+                            </b:EventTrigger>
+                        </b:Interaction.Triggers>
+                    </Button>
+                    <Button Margin="5" Width="100" Content="記事投稿">
+                        <b:Interaction.Triggers>
+                            <b:EventTrigger EventName="Click">
+                                <b:CallMethodAction TargetObject="{Binding}" MethodName="Post"/>
+                            </b:EventTrigger>
+                        </b:Interaction.Triggers>
+                    </Button>
 
-            </StackPanel>
-        </StackPanel>
+                </StackPanel>
+            </Grid>
+        </GroupBox>
+        
         <Grid Grid.Row="1" Margin="5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <DataGrid IsReadOnly="True" ItemsSource="{Binding BlogManager.SearchResults}"/>
-            <Grid Grid.Column="1">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
+            <GroupBox Header="検索結果" Margin="5">
+                <DataGrid IsReadOnly="True" ItemsSource="{Binding BlogManager.SearchResults}"/>
+            </GroupBox>
+            <GroupBox Header="投稿記事" Margin="5" Grid.Column="1">
                 <Grid>
-                    <WrapPanel Orientation="Horizontal">
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                            <TextBlock Margin="5" VerticalAlignment="Center" Text="Id(0は新規):"/>
-                            <TextBox Margin="5" Width="100" Text="{Binding BlogManager.Article.PostId}"/>
-                        </StackPanel>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid>
+                        <WrapPanel Orientation="Horizontal">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                <TextBlock Margin="5" VerticalAlignment="Center" Text="Id(0は新規):"/>
+                                <TextBox Margin="5" Width="100" Text="{Binding BlogManager.Article.PostId}"/>
+                            </StackPanel>
 
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                            <TextBlock Width="40" TextAlignment="Right" VerticalAlignment="Center" Margin="5" Text="タイトル"/>
-                            <TextBlock VerticalAlignment="Center" Margin="5" Text=":"/>
-                            <TextBox Width="200" VerticalAlignment="Center" Margin="5" Text="{Binding BlogManager.Article.Title}"/>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                            <TextBlock Width="40" TextAlignment="Right" VerticalAlignment="Center" Margin="5" Text="スラッグ"/>
-                            <TextBlock VerticalAlignment="Center" Margin="5" Text=":"/>
-                            <TextBox Width="100" VerticalAlignment="Center" Margin="5" Text="{Binding BlogManager.Article.Slug}"/>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                            <TextBlock Width="40" TextAlignment="Right" VerticalAlignment="Center" Margin="5" Text="抜粋"/>
-                            <TextBlock VerticalAlignment="Center" Margin="5" Text=":"/>
-                            <TextBox AcceptsReturn="True" Width="300" Height="30" VerticalAlignment="Center" Margin="5" Text="{Binding BlogManager.Article.Excerpt}"/>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                            <TextBlock Width="40" TextAlignment="Right" VerticalAlignment="Center" Margin="5" Text="詳細"/>
-                            <TextBlock VerticalAlignment="Center" Margin="5" Text=":"/>
-                            <TextBox AcceptsReturn="True" Width="300" Height="30" VerticalAlignment="Center" Margin="5" Text="{Binding BlogManager.Article.Description}"/>
-                        </StackPanel>
-                    </WrapPanel>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                <TextBlock Width="40" TextAlignment="Right" VerticalAlignment="Center" Margin="5" Text="タイトル"/>
+                                <TextBlock VerticalAlignment="Center" Margin="5" Text=":"/>
+                                <TextBox Width="200" VerticalAlignment="Center" Margin="5" Text="{Binding BlogManager.Article.Title}"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                <TextBlock Width="40" TextAlignment="Right" VerticalAlignment="Center" Margin="5" Text="スラッグ"/>
+                                <TextBlock VerticalAlignment="Center" Margin="5" Text=":"/>
+                                <TextBox Width="100" VerticalAlignment="Center" Margin="5" Text="{Binding BlogManager.Article.Slug}"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                <TextBlock Width="40" TextAlignment="Right" VerticalAlignment="Center" Margin="5" Text="抜粋"/>
+                                <TextBlock VerticalAlignment="Center" Margin="5" Text=":"/>
+                                <TextBox AcceptsReturn="True" Width="300" Height="30" VerticalAlignment="Center" Margin="5" Text="{Binding BlogManager.Article.Excerpt}"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                <TextBlock Width="40" TextAlignment="Right" VerticalAlignment="Center" Margin="5" Text="詳細"/>
+                                <TextBlock VerticalAlignment="Center" Margin="5" Text=":"/>
+                                <TextBox AcceptsReturn="True" Width="300" Height="30" VerticalAlignment="Center" Margin="5" Text="{Binding BlogManager.Article.Description}"/>
+                            </StackPanel>
+                        </WrapPanel>
+                    </Grid>
+                    <TextBox Margin="5" Grid.Row="1" Text="{Binding BlogManager.Article.Content}" />
                 </Grid>
-                <TextBox Margin="5" Grid.Row="1" Text="{Binding BlogManager.Article.Content}" />
-            </Grid>
+            </GroupBox>
         </Grid>
     </Grid>
 </UserControl>

@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:WPManager.Views.UserControls"
              xmlns:prism="http://prismlibrary.com/"        
              mc:Ignorable="d" prism:ViewModelLocator.AutoWireViewModel="True"
-             d:DesignHeight="450" d:DesignWidth="800" Background="Red">
+             d:DesignHeight="800" d:DesignWidth="1200" Background="{DynamicResource MahApps.Brushes.Control.Background}">
     <Grid>
             
     </Grid>
