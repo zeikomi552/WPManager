@@ -411,7 +411,7 @@ namespace WPManager.Models.Civitai
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("<!-- wp:cover {\"url\":" +
                 $"\"{first.Url}\"," +
-                "\"alt\":\"トップ画像\",\"dimRatio\":10,\"focalPoint\":{\"x\":0.5,\"y\":0.95},\"minHeight\":840,\"minHeightUnit\":\"px\",\"contentPosition\":" +
+                "\"alt\":\"トップ画像\",\"dimRatio\":10,\"focalPoint\":{\"x\":0.5,\"y\":0.15},\"minHeight\":840,\"minHeightUnit\":\"px\",\"contentPosition\":" +
                 "\"bottom center\",\"align\":\"full\",\"style\":{\"spacing\":{\"padding\":{\"top\":\"var:preset|spacing|50\",\"bottom\":\"var:preset|spacing|50\",\"left\":\"var:preset|spacing|50\"," +
                 "\"right\":\"var:preset|spacing|50\"},\"margin\":{\"top\":\"0\",\"bottom\":\"0\"}}},\"layout\":{\"type\":\"constrained\"}} -->");
 
@@ -421,7 +421,7 @@ namespace WPManager.Models.Civitai
                 "<span aria-hidden=\"true\" class=\"wp-block-cover__background has-background-dim-10 has-background-dim\"></span>" +
                 "<img class=\"wp-block-cover__image-background\" alt=\"トップ画像\" " +
                 $"src=\"{first.Url}\" " +
-                "style=\"object-position:50% 95%\" data-object-fit=\"cover\" data-object-position=\"50% 95%\"/>" +
+                "style=\"object-position:50% 15%\" data-object-fit=\"cover\" data-object-position=\"50% 15%\"/>" +
                 "<div class=\"wp-block-cover__inner-container\"><!-- wp:group {\"align\":\"wide\",\"layout\":{\"type\":\"constrained\",\"justifyContent\":\"left\"}} -->");
             sb.AppendLine("<div class=\"wp-block-group alignwide\"><!-- wp:heading {\"textAlign\":\"left\",\"fontSize\":\"xx-large\"} -->");
             sb.AppendLine("<h2 class=\"wp-block-heading has-text-align-left has-xx-large-font-size\">" +
