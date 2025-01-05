@@ -1,4 +1,5 @@
-﻿using Markdig;
+﻿using ControlzEx.Standard;
+using Markdig;
 using Octokit;
 using System;
 using System.Collections.Generic;
@@ -6,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using WPManager.Common.Extensions;
 
 namespace WPManager.Models.GitHub
@@ -108,6 +110,38 @@ namespace WPManager.Models.GitHub
         }
         #endregion
 
+        public async Task<bool> SearchMaxSync(int page_max)
+        {
+            try
+            {
+                List<Repository> list = new List<Repository>();
+                for (int page = 1; page <= page_max; page++)
+                {
+                    var result = await Search(page);
+
+                    list.AddRange(result.Items.ToList<Repository>());
+                }
+
+                this.SearchResults = new ObservableCollection<Repository>(list);
+
+                if (this.SearchResults.Count > 0)
+                {
+                    // 記事に関する各要素をセット
+                    SetArticleInfo();
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+                return false;
+            }
+        }
+
         #region 検索の実行処理
         /// <summary>
         /// 検索の実行処理
@@ -124,6 +158,35 @@ namespace WPManager.Models.GitHub
                 // 記事に関する各要素をセット
                 SetArticleInfo();
             }
+        }
+        #endregion
+
+        #region 検索の実行処理
+        /// <summary>
+        /// 検索の実行処理
+        /// </summary>
+        public virtual async Task<bool> SearchSync(int page = 0)
+        {
+            try
+            {
+                var result = await Search(page);
+
+                this.SearchResults = new ObservableCollection<Repository>(result.Items.ToList<Repository>());
+
+                // nullチェック
+                if (this.SearchResults != null)
+                {
+                    // 記事に関する各要素をセット
+                    SetArticleInfo();
+                }
+                return true;
+            }
+            catch(Exception e)
+            {
+                MessageBox.Show(e.Message);
+                return false;
+            }
+
         }
         #endregion
 

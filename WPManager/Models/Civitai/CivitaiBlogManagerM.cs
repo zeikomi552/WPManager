@@ -1,13 +1,18 @@
 ﻿using DryIoc;
+using DryIoc.FastExpressionCompiler.LightExpression;
 using Microsoft.Win32;
+using Octokit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using WPManager.Common.Extensions;
 using WPManager.Models.Civitai.Enums;
 using WPManager.Models.Civitai.Models;
+using WPManager.Models.Schedule;
+using static MaterialDesignThemes.Wpf.Theme.ToolBar;
 
 namespace WPManager.Models.Civitai
 {
@@ -108,6 +113,31 @@ namespace WPManager.Models.Civitai
             SetArticleInfo();
         }
         #endregion
+
+        #region 検索処理
+        /// <summary>
+        /// 検索処理
+        /// </summary>
+        public async Task<bool> SearchSync()
+        {
+            try
+            {
+                var client = new CivitaiClient(EndPoint);
+                this.SearchResults = await client.ModelSearch(this.SearchCondition.RequestQuery);
+                SetArticleInfo();
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+        #endregion
+
+        //public void SetScheduleCondition(string title, string slug, )
+        //{
+        //}
 
         #region ブログの記事情報をセットする
         /// <summary>
@@ -333,9 +363,11 @@ namespace WPManager.Models.Civitai
             var first_model = first.ModelVersions.FirstOrDefault();
             var first_image = first_model!.Images.FirstOrDefault();
 
+            string first_image_url = first_image == null ? string.Empty : first_image.Url;
+
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("<!-- wp:cover {\"url\":" +
-                $"\"{first_image!.Url}\"," +
+                $"\"{first_image_url}\"," +
                 "\"alt\":\"トップ画像\",\"dimRatio\":10,\"focalPoint\":{\"x\":0.5,\"y\":0.15},\"minHeight\":840,\"minHeightUnit\":\"px\",\"contentPosition\":" +
                 "\"bottom center\",\"align\":\"full\",\"style\":{\"spacing\":{\"padding\":{\"top\":\"var:preset|spacing|50\",\"bottom\":\"var:preset|spacing|50\",\"left\":\"var:preset|spacing|50\"," +
                 "\"right\":\"var:preset|spacing|50\"},\"margin\":{\"top\":\"0\",\"bottom\":\"0\"}}},\"layout\":{\"type\":\"constrained\"}} -->");
@@ -345,7 +377,7 @@ namespace WPManager.Models.Civitai
                 "padding-bottom:var(--wp--preset--spacing--50);padding-left:var(--wp--preset--spacing--50);min-height:840px\">" +
                 "<span aria-hidden=\"true\" class=\"wp-block-cover__background has-background-dim-10 has-background-dim\"></span>" +
                 "<img class=\"wp-block-cover__image-background\" alt=\"トップ画像\" " +
-                $"src=\"{first_image.Url}\" " +
+                $"src=\"{first_image_url}\" " +
                 "style=\"object-position:50% 15%\" data-object-fit=\"cover\" data-object-position=\"50% 15%\"/>" +
                 "<div class=\"wp-block-cover__inner-container\"><!-- wp:group {\"align\":\"wide\",\"layout\":{\"type\":\"constrained\",\"justifyContent\":\"left\"}} -->");
             sb.AppendLine("<div class=\"wp-block-group alignwide\"><!-- wp:heading {\"textAlign\":\"left\",\"fontSize\":\"xx-large\"} -->");
@@ -606,6 +638,48 @@ namespace WPManager.Models.Civitai
                 }
             }
             return period;
+        }
+        #endregion
+
+        #region 検索と投稿を実行する
+        /// <summary>
+        /// 検索と投稿を実行する
+        /// </summary>
+        /// <param name="schdule_item">スケジュール設定データ</param>
+        /// <param name="wpPrame">WPコンフィグ情報</param>
+        public async void SearchAndPost(ScheduleM schdule_item, WPParameterM wpPrame)
+        {
+            try
+            {
+                CivitaiBlogManagerM civitai_model = new CivitaiBlogManagerM();
+
+                // 基本検索条件をセット
+                civitai_model.SearchCondition.Types = ModelTypeEnum.Checkpoint;
+                civitai_model.SearchCondition.Sort = ModelSortEnum.Most_Downloaded;
+                civitai_model.SearchCondition.Period = schdule_item.CivitaiPeriod;
+
+                // 投稿記事 or 固定ページを設定 
+                civitai_model.PostOrPage = schdule_item.PostPageType;
+
+                // 記事Idをセット(新規作成の場合は0)
+                civitai_model.Article.PostId = schdule_item.ArticleId;
+
+                // 記事タイプ 1:簡素バージョン 2:豪華バージョン
+                civitai_model.ArticleType = schdule_item.ArticleType == 1 ? CivitaiArticleType.Type1 : CivitaiArticleType.Type2;
+
+                // 検索の実行
+                bool ret = await civitai_model.SearchSync();
+
+                if (ret)
+                {
+                    // ポストの実行
+                    civitai_model.Post(wpPrame);
+                }
+            }
+            catch(Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
         }
         #endregion
     }

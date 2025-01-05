@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using WPManager.Common.Utilites;
+using WPManager.Models.Schedule;
 
 namespace WPManager.Models
 {
@@ -29,16 +30,21 @@ namespace WPManager.Models
 
         public GitHubParameterM? GitHubConfig { get; set; }
 
+        public ScheduleConfigM? ScheduleConfig { get; set; }
+
+
         public void Load()
         {
             this.WPConfig = LoadConfig<WPParameterM>(this.ConfigDir, "WPConfig.conf");
             this.GitHubConfig = LoadConfig<GitHubParameterM>(this.ConfigDir, "GitHubConfig.conf");
+            this.ScheduleConfig = LoadConfig<ScheduleConfigM>(this.ConfigDir, "Schedule.conf");
         }
 
         public void Save()
         {
             SaveConfig<WPParameterM>(this.ConfigDir, "WPConfig.conf", this.WPConfig!);
             SaveConfig<GitHubParameterM>(this.ConfigDir, "GitHubConfig.conf", this.GitHubConfig!);
+            SaveConfig<ScheduleConfigM>(this.ConfigDir, "Schedule.conf", this.ScheduleConfig!);
         }
 
 
