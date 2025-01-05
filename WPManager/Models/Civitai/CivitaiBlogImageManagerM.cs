@@ -4,10 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using WPManager.Common.Extensions;
 using WPManager.Models.Civitai.Enums;
 using WPManager.Models.Civitai.Images;
 using WPManager.Models.Civitai.Models;
+using WPManager.Models.Schedule;
 
 namespace WPManager.Models.Civitai
 {
@@ -106,6 +108,27 @@ namespace WPManager.Models.Civitai
             var client = new CivitaiClient(EndPoint);
             this.SearchResults = await client.ImageSearch(this.SearchCondition.RequestQuery);
             SetArticleInfo();
+        }
+        #endregion
+
+        #region 検索処理
+        /// <summary>
+        /// 検索処理
+        /// </summary>
+        public async Task<bool> SearchSync()
+        {
+            try
+            {
+                var client = new CivitaiClient(EndPoint);
+                this.SearchResults = await client.ImageSearch(this.SearchCondition.RequestQuery);
+                SetArticleInfo();
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
         #endregion
 
@@ -576,6 +599,47 @@ namespace WPManager.Models.Civitai
         public string GetExcerpt()
         {
             return GetTitle();
+        }
+        #endregion
+
+        #region 検索と投稿を実行する
+        /// <summary>
+        /// 検索と投稿を実行する
+        /// </summary>
+        /// <param name="schdule_item">スケジュール設定データ</param>
+        /// <param name="wpPrame">WPコンフィグ情報</param>
+        public async void SearchAndPost(ScheduleM schdule_item, WPParameterM wpPrame)
+        {
+            try
+            {
+                CivitaiBlogImageManagerM civitai_model = new CivitaiBlogImageManagerM();
+
+                // 基本検索条件をセット
+                civitai_model.SearchCondition.Sort = ModelSortEnum2.Most_Reactions;
+                civitai_model.SearchCondition.Period = schdule_item.CivitaiPeriod;
+
+                // 投稿記事 or 固定ページを設定 
+                civitai_model.PostOrPage = schdule_item.PostPageType;
+
+                // 記事Idをセット(新規作成の場合は0)
+                civitai_model.Article.PostId = schdule_item.ArticleId;
+
+                // 記事タイプ 1:簡素バージョン 2:豪華バージョン
+                civitai_model.ArticleType = schdule_item.ArticleType == 1 ? CivitaiArticleType.Type1 : CivitaiArticleType.Type2;
+
+                // 検索の実行
+                bool ret = await civitai_model.SearchSync();
+
+                if (ret)
+                {
+                    // ポストの実行
+                    civitai_model.Post(wpPrame);
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
         }
         #endregion
     }

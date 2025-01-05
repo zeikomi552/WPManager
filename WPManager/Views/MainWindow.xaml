@@ -15,6 +15,9 @@
     </b:Interaction.Triggers>
     <Grid>
         <TabControl>
+            <TabItem Header="Schedule">
+                <ContentControl Margin="5" prism:RegionManager.RegionName="ScheduleRegion"/>
+            </TabItem>
             <TabItem Header="GitHub">
                 <ContentControl Margin="5" prism:RegionManager.RegionName="GitHubRegion"/>
             </TabItem>
