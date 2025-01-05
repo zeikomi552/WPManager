@@ -12,6 +12,7 @@ using System.Windows;
 using WPManager.Common.Extensions;
 using WPManager.Models.Civitai;
 using WPManager.Models.Civitai.Enums;
+using WPManager.Models.GitHub.Enums;
 using WPManager.Models.Schedule;
 
 namespace WPManager.Models.GitHub
@@ -69,7 +70,7 @@ namespace WPManager.Models.GitHub
         /// 記事作成処理
         /// </summary>
         /// <returns>記事</returns>
-        protected override string GetArticle()
+        protected override string GetArticleType1()
         {
             DateTime startDt = this.SearchCondition.SearchFrom;
             DateTime endDt = this.SearchCondition.SearchTo;
@@ -116,6 +117,137 @@ namespace WPManager.Models.GitHub
             return mdContents.Replace("<table>", "<table border=\"1\">");
         }
         #endregion
+
+        #region ブログの検索条件文字列作成処理
+        /// <summary>
+        /// ブログの検索条件文字列作成処理
+        /// </summary>
+        /// <returns>ブログの検索条件文字列</returns>
+        private string BlogSearchCondition()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("<!-- wp:paragraph --> ");
+            DateTime startDt = this.SearchCondition.SearchFrom;
+            DateTime endDt = this.SearchCondition.SearchTo;
+            sb.Append($"<p>調査対象 {startDt.ToString("yyyy/MM/dd")} - {endDt.ToString("yyyy/MM/dd")}, リポジトリ数 {this.SearchResults.Count()}, スター獲得数順</p> ");
+            sb.Append("<!-- /wp:paragraph --> ");
+            return sb.ToString();
+
+        }
+        #endregion
+
+
+        private string BlogListItem(int rank, Repository repos)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("<!-- wp:group {\"style\":{\"spacing\":{\"padding\":{\"top\":\"var:preset|spacing|40\",\"bottom\":\"var:preset|spacing|40\"}},\"border\":{\"top\":{\"color\":\"var:preset|color|accent-6\",\"width\":\"1px\"}}},\"layout\":{\"type\":\"flex\",\"flexWrap\":\"wrap\",\"justifyContent\":\"space-between\"}} -->");
+            sb.AppendLine("<div class=\"wp-block-group\" style=\"border-top-color:var(--wp--preset--color--accent-6);border-top-width:1px;padding-top:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--40)\">");
+            sb.AppendLine("<!-- wp:group {\"layout\":{\"type\":\"constrained\"}} -->");
+            sb.AppendLine("<div class=\"wp-block-group\"><!-- wp:heading {\"level\":3} -->");
+
+            string repoName = string.IsNullOrEmpty(repos.FullName) ? "不明" : repos.FullName;
+
+            sb.AppendLine($"<h3 class=\"wp-block-heading is-style-text-subtitle\">{rank}位  {repoName}</h3>");
+            sb.AppendLine("<!-- /wp:heading -->");
+            sb.AppendLine("");
+            sb.AppendLine("<!-- wp:paragraph -->");
+            sb.AppendLine($"Star : {repos.StargazersCount}<br>");
+            sb.AppendLine($"Language : {repos.Language}<br>");
+            sb.AppendLine($"Owner : {repos.Owner.Login}<br>");
+            sb.AppendLine($"Description : {repos.Description.EmptyToText("-").CutText(50).Replace("|", "\\/")}<br>");
+            sb.AppendLine("<!-- /wp:paragraph --></div>");
+            sb.AppendLine("<!-- /wp:group -->");
+            sb.AppendLine("");
+            sb.AppendLine("<!-- wp:group {\"style\":{\"spacing\":{\"blockGap\":\"var:preset|spacing|70\"}},\"layout\":{\"type\":\"flex\",\"flexWrap\":\"wrap\",\"justifyContent\":\"space-between\"}} -->");
+            sb.AppendLine("<div class=\"wp-block-group\">"); 
+            sb.AppendLine("");
+            sb.AppendLine("<!-- wp:buttons -->");
+            sb.AppendLine("<div class=\"wp-block-buttons\">");
+
+            if (!string.IsNullOrEmpty(repos.HtmlUrl))
+            {
+                sb.AppendLine("<!-- wp:button {\"fontSize\":\"small\"} -->");
+                sb.AppendLine("<div class=\"wp-block-button has-custom-font-size has-small-font-size\"><a class=\"wp-block-button__link wp-element-button\" " +
+                    $"href=\"{repos.HtmlUrl}\">" +
+                    "GitHub</a></div>");
+                sb.AppendLine("<!-- /wp:button -->");
+            }
+            if (!string.IsNullOrEmpty(repos.Owner.HtmlUrl))
+            {
+                sb.AppendLine("<!-- wp:button {\"fontSize\":\"small\"} -->");
+                sb.AppendLine("<div class=\"wp-block-button has-custom-font-size has-small-font-size\"><a class=\"wp-block-button__link wp-element-button\" " +
+                    $"href=\"{repos.Owner.HtmlUrl}\">" +
+                    "Owner Page</a></div>");
+                sb.AppendLine("<!-- /wp:button -->");
+            }
+
+            if (!string.IsNullOrEmpty(repos.Homepage) && !repos.Homepage.Equals("https://github.com"))
+            {
+                sb.AppendLine("<!-- wp:button {\"fontSize\":\"small\"} -->");
+                sb.AppendLine("<div class=\"wp-block-button has-custom-font-size has-small-font-size\"><a class=\"wp-block-button__link wp-element-button\" " +
+                    $"href=\"{repos.Homepage}\">" +
+                    "Homepage</a></div>");
+                sb.AppendLine("<!-- /wp:button -->");
+            }
+            if (!string.IsNullOrEmpty(repos.Owner.Blog))
+            {
+                sb.AppendLine("<!-- wp:button {\"fontSize\":\"small\"} -->");
+                sb.AppendLine("<div class=\"wp-block-button has-custom-font-size has-small-font-size\"><a class=\"wp-block-button__link wp-element-button\" " +
+                    $"href=\"{repos.Owner.Blog}\">" +
+                    "Homepage</a></div>");
+                sb.AppendLine("<!-- /wp:button -->");
+            }
+
+
+            sb.AppendLine("</div>");
+            sb.AppendLine("<!-- /wp:buttons --></div>");
+            sb.AppendLine("<!-- /wp:group --></div>");
+            sb.AppendLine("<!-- /wp:group -->");
+            return sb.ToString();
+        }
+
+        #region 記事作成処理(デザイン性のあるレイアウト)
+        /// <summary>
+        /// 記事作成処理(デザイン性のあるレイアウト)
+        /// </summary>
+        /// <returns></returns>
+        protected override string GetArticleType2()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("<!-- wp:group {\"metadata\":{\"categories\":[\"twentytwentyfive_page\"],\"patternName\":\"core/block/421\",\"name\":\"WPManagerテンプレート\"},\"align\":\"full\",\"style\":{\"spacing\":{\"padding\":{\"top\":\"var:preset|spacing|50\",\"bottom\":\"var:preset|spacing|50\"},\"margin\":{\"top\":\"0\",\"bottom\":\"0\"}}},\"layout\":{\"type\":\"constrained\"}} -->");
+            sb.AppendLine("<div class=\"wp-block-group alignfull\" style=\"margin-top:0;margin-bottom:0;padding-top:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--50)\">");
+            sb.AppendLine("<!-- wp:group {\"align\":\"wide\",\"layout\":{\"type\":\"default\"}} -->");
+            sb.AppendLine("<div class=\"wp-block-group alignwide\"><!-- wp:heading -->");
+            sb.AppendLine("<h2 class=\"wp-block-heading\">GitHub人気言語ランキング</h2>");
+            sb.AppendLine("<!-- /wp:heading -->");
+            sb.AppendLine("");
+            sb.AppendLine(BlogSearchCondition());
+            sb.AppendLine("");
+            sb.AppendLine("<!-- wp:group {\"style\":{\"spacing\":{\"blockGap\":\"0\",\"margin\":{\"top\":\"var:preset|spacing|70\"}}},\"layout\":{\"type\":\"default\"}} -->");
+            sb.AppendLine("<div class=\"wp-block-group\" style=\"margin-top:var(--wp--preset--spacing--70)\">");
+
+            int max = this.SearchResults.Count();
+            for (int i = 0; i < max; i++)
+            {
+                var item = this.SearchResults.ElementAt(i);
+                string text = BlogListItem(i + 1, item);
+                sb.AppendLine(text);
+
+                if (i + 1 == max)
+                {
+                    sb.AppendLine("</div>");
+                }
+            }
+
+            sb.AppendLine("<!-- /wp:group --></div>");
+            sb.AppendLine("<!-- /wp:group --></div>");
+            sb.AppendLine("<!-- /wp:group -->");
+
+            return sb.ToString();
+
+        }
+        #endregion
+
 
         #region スラッグを作成する
         /// <summary>
@@ -228,7 +360,7 @@ namespace WPManager.Models.GitHub
                 item.Article.PostId = schdule_item.ArticleId;
 
                 // 記事タイプ 1:簡素バージョン 2:豪華バージョン
-                //item. = schdule_item.ArticleType == 1 ? CivitaiArticleType.Type1 : CivitaiArticleType.Type2;
+                item.ArticleType = schdule_item.ArticleType == 1 ? GitHubArticleType.Type1 : GitHubArticleType.Type2;
 
                 // 検索の実行
                 bool ret = await item.SearchSync();

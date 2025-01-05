@@ -9,11 +9,37 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using WPManager.Common.Extensions;
+using WPManager.Models.GitHub.Enums;
 
 namespace WPManager.Models.GitHub
 {
     public class GitHubBlogManagerBaseM : BaseBlogManagerM
     {
+        #region ブログタイプ
+        /// <summary>
+        /// ブログタイプ
+        /// </summary>
+        GitHubArticleType _ArticleType = GitHubArticleType.Type1;
+        /// <summary>
+        /// ブログタイプ
+        /// </summary>
+        public GitHubArticleType ArticleType
+        {
+            get
+            {
+                return _ArticleType;
+            }
+            set
+            {
+                if (!_ArticleType.Equals(value))
+                {
+                    _ArticleType = value;
+                    RaisePropertyChanged("ArticleType");
+                }
+            }
+        }
+        #endregion
+
         #region GitHub接続用パラメーター
         /// <summary>
         /// GitHub接続用パラメーター
@@ -248,12 +274,45 @@ namespace WPManager.Models.GitHub
         }
         #endregion
 
+        #region 記事の作成処理
+        /// <summary>
+        /// 記事の作成処理
+        /// </summary>
+        /// <returns>記事</returns>
+        protected virtual string GetArticle()
+        {
+            switch (this.ArticleType)
+            {
+                case GitHubArticleType.Type1:
+                default:
+                    {
+                        return GetArticleType1();
+                    }
+                case GitHubArticleType.Type2:
+                    {
+                        return GetArticleType2();
+                    }
+            }
+        }
+        #endregion
+
         #region 記事作成処理
         /// <summary>
         /// 記事作成処理
         /// </summary>
         /// <returns>記事</returns>
-        protected virtual string GetArticle()
+        protected virtual string GetArticleType1()
+        {
+            return string.Empty;
+        }
+        #endregion
+
+        #region 記事作成処理
+        /// <summary>
+        /// 記事作成処理
+        /// </summary>
+        /// <returns>記事</returns>
+        protected virtual string GetArticleType2()
         {
             return string.Empty;
         }
@@ -304,5 +363,7 @@ namespace WPManager.Models.GitHub
 
         }
         #endregion
+
+
     }
 }

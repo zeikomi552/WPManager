@@ -16,31 +16,6 @@ namespace WPManager.Models.GitHub
 {
     public class GitHubBolgLanguageManagerM : GitHubBlogManagerBaseM
     {
-        #region ブログタイプ
-        /// <summary>
-        /// ブログタイプ
-        /// </summary>
-        GitHubArticleType _ArticleType = GitHubArticleType.Type1;
-        /// <summary>
-        /// ブログタイプ
-        /// </summary>
-        public GitHubArticleType ArticleType
-        {
-            get
-            {
-                return _ArticleType;
-            }
-            set
-            {
-                if (!_ArticleType.Equals(value))
-                {
-                    _ArticleType = value;
-                    RaisePropertyChanged("ArticleType");
-                }
-            }
-        }
-        #endregion
-
         #region 検索処理
         /// <summary>
         /// 検索処理
@@ -60,33 +35,12 @@ namespace WPManager.Models.GitHub
         }
         #endregion
 
-        #region 記事の作成処理
-        /// <summary>
-        /// 記事の作成処理
-        /// </summary>
-        /// <returns>記事</returns>
-        protected override string GetArticle()
-        {
-            switch (this.ArticleType)
-            {
-                case GitHubArticleType.Type1:
-                default:
-                    {
-                        return GetArticleType1();
-                    }
-                case GitHubArticleType.Type2:
-                    {
-                        return GetArticleType2();
-                    }
-            }
-        }
-        #endregion
         #region 記事作成処理
         /// <summary>
         /// 記事作成処理
         /// </summary>
         /// <returns>記事</returns>
-        protected string GetArticleType1()
+        protected override string GetArticleType1()
         {
             DateTime startDt = this.SearchCondition.SearchFrom;
             DateTime endDt = this.SearchCondition.SearchTo;
@@ -132,7 +86,7 @@ namespace WPManager.Models.GitHub
         /// 記事作成処理(デザイン性のあるレイアウト)
         /// </summary>
         /// <returns></returns>
-        public string GetArticleType2()
+        protected override string GetArticleType2()
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("<!-- wp:group {\"metadata\":{\"categories\":[\"twentytwentyfive_page\"],\"patternName\":\"core/block/421\",\"name\":\"WPManagerテンプレート\"},\"align\":\"full\",\"style\":{\"spacing\":{\"padding\":{\"top\":\"var:preset|spacing|50\",\"bottom\":\"var:preset|spacing|50\"},\"margin\":{\"top\":\"0\",\"bottom\":\"0\"}}},\"layout\":{\"type\":\"constrained\"}} -->");
@@ -176,6 +130,12 @@ namespace WPManager.Models.GitHub
 
         }
         #endregion
+
+        #region ブログの検索条件文字列作成処理
+        /// <summary>
+        /// ブログの検索条件文字列作成処理
+        /// </summary>
+        /// <returns>ブログの検索条件文字列</returns>
         private string BlogSearchCondition()
         {
             StringBuilder sb = new StringBuilder();
@@ -187,6 +147,7 @@ namespace WPManager.Models.GitHub
             return sb.ToString();
 
         }
+        #endregion
 
         private string BlogListItem(int rank, string language, int starCnt)
         {
