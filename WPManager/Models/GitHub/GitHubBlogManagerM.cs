@@ -36,11 +36,11 @@ namespace WPManager.Models.GitHub
         /// <summary>
         /// 検索処理
         /// </summary>
-        public override async Task<bool> SearchSync()
+        public override async Task<bool> SearchSync(int page = 0)
         {
             try
             {
-                return await base.SearchSync();
+                return await base.SearchSync(page);
             }
             catch
             {
@@ -235,6 +235,9 @@ namespace WPManager.Models.GitHub
 
                 if (ret)
                 {
+                    // 記事タイトル
+                    item.Article.Title = schdule_item.Title;
+
                     // ポストの実行
                     item.Post(config.WPConfig);
                 }

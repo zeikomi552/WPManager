@@ -6,9 +6,11 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using WPManager.Common.Extensions;
 using WPManager.Models.Civitai.Enums;
 using WPManager.Models.GitHub.Enums;
+using WPManager.Models.Schedule;
 
 namespace WPManager.Models.GitHub
 {
@@ -90,7 +92,7 @@ namespace WPManager.Models.GitHub
             DateTime endDt = this.SearchCondition.SearchTo;
 
             StringBuilder text = new StringBuilder();
-            text.AppendLine($"## GitHub調査日{DateTime.Today.ToString("yyyy/MM/dd")}");
+            text.AppendLine($"## GitHub調査日時 {DateTime.Now.ToString("yyyy/MM/dd(ddd) HH:mm:ss")}");
 
             text.AppendLine($"### 検索条件");
 
@@ -262,6 +264,56 @@ namespace WPManager.Models.GitHub
         {
             return GetTitle();
 
+        }
+        #endregion
+
+
+        #region 検索と投稿を実行する
+        /// <summary>
+        /// 検索と投稿を実行する
+        /// </summary>
+        /// <param name="schdule_item">スケジュール設定データ</param>
+        /// <param name="wpPrame">WPコンフィグ情報</param>
+        public async void SearchAndPost(ScheduleM schdule_item, IGlobalConfigM config)
+        {
+            try
+            {
+                if (config == null || config.GitHubConfig == null || config.WPConfig == null)
+                    return;
+
+                GitHubBolgLanguageManagerM item = new GitHubBolgLanguageManagerM();
+
+                // 基本検索条件をセット
+                item.GitHubParameter.ProductName = config.GitHubConfig.ProductName;
+                item.GitHubParameter.AccessToken = config.GitHubConfig.AccessToken;
+                item.SearchCondition.SearchFrom = schdule_item.SearchFrom;
+                item.SearchCondition.SearchTo = schdule_item.SearchTo;
+
+                // 投稿記事 or 固定ページを設定 
+                item.PostOrPage = schdule_item.PostPageType;
+
+                // 記事Idをセット(新規作成の場合は0)
+                item.Article.PostId = schdule_item.ArticleId;
+
+                // 記事タイプ 1:簡素バージョン 2:豪華バージョン
+                //item. = schdule_item.ArticleType == 1 ? CivitaiArticleType.Type1 : CivitaiArticleType.Type2;
+
+                // 検索の実行
+                var tmp = await item.SearchMaxSync(10);
+
+                if (tmp)
+                {
+                    // 記事タイトル
+                    item.Article.Title = schdule_item.Title;
+
+                    // ポストの実行
+                    item.Post(config.WPConfig);
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
         }
         #endregion
     }

@@ -100,7 +100,11 @@ namespace WPManager.ViewModels.UserControls
         }
         #endregion
 
-        public async void Post()
+        #region 投稿処理
+        /// <summary>
+        /// 投稿処理
+        /// </summary>
+        public void Post()
         {
             foreach (var item in this.ScheduleConf.ScheduleItems)
             {
@@ -120,15 +124,26 @@ namespace WPManager.ViewModels.UserControls
                                 civitai_model.SearchAndPost(item, this.Config!.WPConfig!);
                                 break;
                             }
+                        case Models.WordPress.SourceTypeEnum.GitHubLanguage:
+                            {
+                                GitHubBolgLanguageManagerM model = new GitHubBolgLanguageManagerM();
+                                model.SearchAndPost(item, this.Config!);
+                                break;
+                            }
                         case Models.WordPress.SourceTypeEnum.GitHubRepository:
                             {
                                 GitHubBlogManagerM model = new GitHubBlogManagerM();
-                                model.SearchAndPost(item, this.Config);
+                                model.SearchAndPost(item, this.Config!);
+                                break;
+                            }
+                        default:
+                            {
                                 break;
                             }
                     }
                 }
             }
         }
+        #endregion
     }
 }
