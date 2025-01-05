@@ -127,6 +127,11 @@ namespace WPManager.Models.GitHub
         }
         #endregion
 
+        #region 記事作成処理(デザイン性のあるレイアウト)
+        /// <summary>
+        /// 記事作成処理(デザイン性のあるレイアウト)
+        /// </summary>
+        /// <returns></returns>
         public string GetArticleType2()
         {
             StringBuilder sb = new StringBuilder();
@@ -170,7 +175,7 @@ namespace WPManager.Models.GitHub
             return sb.ToString();
 
         }
-
+        #endregion
         private string BlogSearchCondition()
         {
             StringBuilder sb = new StringBuilder();
@@ -296,7 +301,7 @@ namespace WPManager.Models.GitHub
                 item.Article.PostId = schdule_item.ArticleId;
 
                 // 記事タイプ 1:簡素バージョン 2:豪華バージョン
-                //item. = schdule_item.ArticleType == 1 ? CivitaiArticleType.Type1 : CivitaiArticleType.Type2;
+                item.ArticleType = schdule_item.ArticleType == 1 ? GitHubArticleType.Type1 : GitHubArticleType.Type2;
 
                 // 検索の実行
                 var tmp = await item.SearchMaxSync(10);
