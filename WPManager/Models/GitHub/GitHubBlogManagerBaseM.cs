@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using WPManager.Common.Extensions;
 
 namespace WPManager.Models.GitHub
@@ -105,6 +106,35 @@ namespace WPManager.Models.GitHub
             }
 
             return list;
+        }
+        #endregion
+
+        #region 検索の実行処理
+        /// <summary>
+        /// 検索の実行処理
+        /// </summary>
+        public virtual async Task<bool> SearchSync()
+        {
+            try
+            {
+                var result = await Search(0);
+
+                this.SearchResults = new ObservableCollection<Repository>(result.Items.ToList<Repository>());
+
+                // nullチェック
+                if (this.SearchResults != null)
+                {
+                    // 記事に関する各要素をセット
+                    SetArticleInfo();
+                }
+                return true;
+            }
+            catch(Exception e)
+            {
+                MessageBox.Show(e.Message);
+                return false;
+            }
+
         }
         #endregion
 

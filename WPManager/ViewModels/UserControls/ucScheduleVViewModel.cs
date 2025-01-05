@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using WPManager.Models;
 using WPManager.Models.Civitai;
 using WPManager.Models.Civitai.Enums;
+using WPManager.Models.GitHub;
 using WPManager.Models.Schedule;
 
 namespace WPManager.ViewModels.UserControls
@@ -117,6 +118,12 @@ namespace WPManager.ViewModels.UserControls
                             {
                                 CivitaiBlogImageManagerM civitai_model = new CivitaiBlogImageManagerM();
                                 civitai_model.SearchAndPost(item, this.Config!.WPConfig!);
+                                break;
+                            }
+                        case Models.WordPress.SourceTypeEnum.GitHubRepository:
+                            {
+                                GitHubBlogManagerM model = new GitHubBlogManagerM();
+                                model.SearchAndPost(item, this.Config);
                                 break;
                             }
                     }
