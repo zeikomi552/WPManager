@@ -129,6 +129,7 @@ namespace WPManager.Models.GitHub
             sb.Append("<!-- wp:paragraph --> ");
             DateTime startDt = this.SearchCondition.SearchFrom;
             DateTime endDt = this.SearchCondition.SearchTo;
+            sb.Append($"<p>更新日 {DateTime.Now.ToString("yyyy/MM/dd(ddd)")}</p> ");
             sb.Append($"<p>調査対象 {startDt.ToString("yyyy/MM/dd")} - {endDt.ToString("yyyy/MM/dd")}, リポジトリ数 {this.SearchResults.Count()}, スター獲得数順</p> ");
             sb.Append("<!-- /wp:paragraph --> ");
             return sb.ToString();
@@ -151,10 +152,10 @@ namespace WPManager.Models.GitHub
             sb.AppendLine("<!-- /wp:heading -->");
             sb.AppendLine("");
             sb.AppendLine("<!-- wp:paragraph -->");
-            sb.AppendLine($"Star : {repos.StargazersCount}<br>");
-            sb.AppendLine($"Language : {repos.Language}<br>");
-            sb.AppendLine($"Owner : {repos.Owner.Login}<br>");
-            sb.AppendLine($"Description : {repos.Description.EmptyToText("-").CutText(50).Replace("|", "\\/")}<br>");
+            sb.AppendLine($"<p>Star : {repos.StargazersCount}</p>");
+            sb.AppendLine($"<p>Language : {repos.Language}</p>");
+            sb.AppendLine($"<p>Owner : {repos.Owner.Login}</p>");
+            sb.AppendLine($"<p>Description : {repos.Description.EmptyToText("-").CutText(50).Replace("|", "\\/")}</p>");
             sb.AppendLine("<!-- /wp:paragraph --></div>");
             sb.AppendLine("<!-- /wp:group -->");
             sb.AppendLine("");
@@ -178,6 +179,12 @@ namespace WPManager.Models.GitHub
                 sb.AppendLine("<div class=\"wp-block-button has-custom-font-size has-small-font-size\"><a class=\"wp-block-button__link wp-element-button\" " +
                     $"href=\"{repos.Owner.HtmlUrl}\">" +
                     "Owner Page</a></div>");
+                sb.AppendLine("<!-- /wp:button -->");
+
+                sb.AppendLine("<!-- wp:button {\"fontSize\":\"small\"} -->");
+                sb.AppendLine("<div class=\"wp-block-button has-custom-font-size has-small-font-size\"><a class=\"wp-block-button__link wp-element-button\" " +
+                    $"href=\"https://www.google.co.jp/search?q={repos.FullName.Replace("/", "%2F")}\">" +
+                    "Google</a></div>");
                 sb.AppendLine("<!-- /wp:button -->");
             }
 
@@ -218,7 +225,7 @@ namespace WPManager.Models.GitHub
             sb.AppendLine("<div class=\"wp-block-group alignfull\" style=\"margin-top:0;margin-bottom:0;padding-top:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--50)\">");
             sb.AppendLine("<!-- wp:group {\"align\":\"wide\",\"layout\":{\"type\":\"default\"}} -->");
             sb.AppendLine("<div class=\"wp-block-group alignwide\"><!-- wp:heading -->");
-            sb.AppendLine("<h2 class=\"wp-block-heading\">GitHub人気言語ランキング</h2>");
+            sb.AppendLine("<h2 class=\"wp-block-heading\">GitHub人気リポジトリ</h2>");
             sb.AppendLine("<!-- /wp:heading -->");
             sb.AppendLine("");
             sb.AppendLine(BlogSearchCondition());

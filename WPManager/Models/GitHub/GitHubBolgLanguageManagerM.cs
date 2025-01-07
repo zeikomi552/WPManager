@@ -142,6 +142,7 @@ namespace WPManager.Models.GitHub
             sb.Append("<!-- wp:paragraph --> ");
             DateTime startDt = this.SearchCondition.SearchFrom;
             DateTime endDt = this.SearchCondition.SearchTo;
+            sb.Append($"<p>更新日 {DateTime.Now.ToString("yyyy/MM/dd(ddd)")}</p> ");
             sb.Append($"<p>調査対象 {startDt.ToString("yyyy/MM/dd")} - {endDt.ToString("yyyy/MM/dd")}, リポジトリ数 {this.SearchResults.Count()}, スター獲得数順</p> ");
             sb.Append("<!-- /wp:paragraph --> ");
             return sb.ToString();
