@@ -115,6 +115,33 @@ namespace WPManager.Models.GitHub
         }
         #endregion
 
+        #region 選択中のリポジトリ
+        /// <summary>
+        /// 選択中のリポジトリ
+        /// </summary>
+        Repository _SelectedSearchRepository = new Repository();
+        /// <summary>
+        /// 選択中のリポジトリ
+        /// </summary>
+        public Repository SelectedSearchRepository
+        {
+            get
+            {
+                return _SelectedSearchRepository;
+            }
+            set
+            {
+                if (_SelectedSearchRepository == null || !_SelectedSearchRepository.Equals(value))
+                {
+                    _SelectedSearchRepository = value;
+                    RaisePropertyChanged("SelectedSearchRepository");
+                }
+            }
+        }
+        #endregion
+
+
+
         #region 指定したページ数まで検索を実行する
         /// <summary>
         /// 指定したページ数まで検索を実行する
@@ -252,8 +279,9 @@ namespace WPManager.Models.GitHub
 
             // 降順でソート
             request.Order = SortDirection.Descending;
-#pragma warning restore CS0618 // 型またはメンバーが旧型式です
 
+            var query = request.ToString();
+#pragma warning restore CS0618 // 型またはメンバーが旧型式です
             return await client.Search.SearchRepo(request);
 
         }
