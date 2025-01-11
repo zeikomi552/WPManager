@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="WPManager.Views.UserControls.ucGitHubV"
+﻿<UserControl
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -6,11 +6,16 @@
              xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:enum="clr-namespace:Octokit;assembly=Octokit"
+             xmlns:act="clr-namespace:WPManager.Common.Actions"
              xmlns:my="clr-namespace:WPManager.Common.Utilites"
              xmlns:vm="clr-namespace:WPManager.ViewModels.UserControls"
+             xmlns:Converters="clr-namespace:WPManager.Common.Converters" x:Class="WPManager.Views.UserControls.ucGitHubV"
              d:DataContext="{d:DesignInstance Type={x:Type vm:ucGitHubVViewModel}}"
              mc:Ignorable="d" 
              d:DesignHeight="800" d:DesignWidth="1200" Background="{DynamicResource MahApps.Brushes.Control.Background}">
+    <UserControl.Resources>
+        <Converters:NullToBooleanFalseConverter x:Key="NullToBooleanFalseConverter"/>
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -51,7 +56,7 @@
                             </b:Interaction.Triggers>
                         </Button>
                     </StackPanel>
-                    
+
                 </WrapPanel>
                 <StackPanel Grid.Row="1" Orientation="Horizontal">
                     <Button Margin="5" Width="100" Content="一覧取得">
@@ -72,7 +77,7 @@
                 </StackPanel>
             </Grid>
         </GroupBox>
-        
+
         <Grid Grid.Row="1" Margin="5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -80,7 +85,58 @@
             </Grid.ColumnDefinitions>
             <GroupBox Header="検索結果" Margin="5">
                 <DataGrid IsReadOnly="True" ItemsSource="{Binding BlogManager.SearchResults}" 
-                          SelectedItem="{Binding BlogManager.SelectedSearchRepository, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                          SelectedItem="{Binding BlogManager.SelectedSearchRepository, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <DataGrid.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="OpenURL">
+                                <MenuItem Header="Url" IsEnabled="{Binding BlogManager.SelectedSearchRepository.Url, Converter={StaticResource NullToBooleanFalseConverter}, Mode=OneWay}">
+                                    <b:Interaction.Triggers>
+                                        <b:EventTrigger EventName="Click">
+                                            <act:OpenURLAction URL="{Binding BlogManager.SelectedSearchRepository.Url}"/>
+                                        </b:EventTrigger>
+                                    </b:Interaction.Triggers>
+                                </MenuItem>
+                                <MenuItem Header="Homepage" IsEnabled="{Binding BlogManager.SelectedSearchRepository.Homepage, Converter={StaticResource NullToBooleanFalseConverter}, Mode=OneWay}">
+                                    <b:Interaction.Triggers>
+                                        <b:EventTrigger EventName="Click">
+                                            <act:OpenURLAction URL="{Binding BlogManager.SelectedSearchRepository.Homepage}"/>
+                                        </b:EventTrigger>
+                                    </b:Interaction.Triggers>
+                                </MenuItem>
+                                <MenuItem Header="HtmlUrl" IsEnabled="{Binding BlogManager.SelectedSearchRepository.HtmlUrl, Converter={StaticResource NullToBooleanFalseConverter}, Mode=OneWay}">
+                                    <b:Interaction.Triggers>
+                                        <b:EventTrigger EventName="Click">
+                                            <act:OpenURLAction URL="{Binding BlogManager.SelectedSearchRepository.HtmlUrl}"/>
+                                        </b:EventTrigger>
+                                    </b:Interaction.Triggers>
+                                </MenuItem>
+                                <MenuItem Header="Owner.AvatarUrl" IsEnabled="{Binding BlogManager.SelectedSearchRepository.Owner.AvatarUrl, Converter={StaticResource NullToBooleanFalseConverter}, Mode=OneWay}">
+                                    <b:Interaction.Triggers>
+                                        <b:EventTrigger EventName="Click">
+                                            <act:OpenURLAction URL="{Binding BlogManager.SelectedSearchRepository.Owner.AvatarUrl}"/>
+                                        </b:EventTrigger>
+                                    </b:Interaction.Triggers>
+                                </MenuItem>
+                                <MenuItem Header="Owner.HtmlUrl" IsEnabled="{Binding BlogManager.SelectedSearchRepository.Owner.HtmlUrl, Converter={StaticResource NullToBooleanFalseConverter}, Mode=OneWay}">
+                                    <b:Interaction.Triggers>
+                                        <b:EventTrigger EventName="Click">
+                                            <act:OpenURLAction URL="{Binding BlogManager.SelectedSearchRepository.Owner.HtmlUrl}"/>
+                                        </b:EventTrigger>
+                                    </b:Interaction.Triggers>
+                                </MenuItem>
+                                <MenuItem Header="Owner.Url" IsEnabled="{Binding BlogManager.SelectedSearchRepository.Owner.Url, Converter={StaticResource NullToBooleanFalseConverter}, Mode=OneWay}">
+                                    <b:Interaction.Triggers>
+                                        <b:EventTrigger EventName="Click">
+                                            <act:OpenURLAction URL="{Binding BlogManager.SelectedSearchRepository.Owner.Url}"/>
+                                        </b:EventTrigger>
+                                    </b:Interaction.Triggers>
+                                </MenuItem>
+                            </MenuItem>
+                        </ContextMenu>
+                    </DataGrid.ContextMenu>
+
+
+                </DataGrid>
             </GroupBox>
             <TabControl Grid.Column="1">
                 <TabItem Header="Owner">

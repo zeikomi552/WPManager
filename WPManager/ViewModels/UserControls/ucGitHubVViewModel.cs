@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 using WPManager.Models;
 using WPManager.Common.Extensions;
 using WPManager.Models.GitHub;
+using System.Windows.Controls;
+using System.Windows.Input;
+using System.Diagnostics;
 
 namespace WPManager.ViewModels.UserControls
 {

@@ -287,6 +287,27 @@ namespace WPManager.Models.GitHub
         }
         #endregion
 
+        public async Task<SearchUsersResult> SearchUser(string username)
+        {
+            // GitHub Clientの作成
+            var client = new GitHubClient(new ProductHeaderValue(this.GitHubParameter.ProductName));
+
+            // トークンの取得
+            var tokenAuth = new Credentials(this.GitHubParameter.AccessToken);
+            client.Credentials = tokenAuth;
+
+            SearchUsersRequest request = new SearchUsersRequest(username);
+
+
+            // 降順でソート
+            request.Order = SortDirection.Descending;
+
+            var tmp = await client.User.Get(username);
+
+            return await client.Search.SearchUsers(request);
+        }
+
+
         #region ブログの記事情報をセットする
         /// <summary>
         /// ブログの記事情報をセットする
