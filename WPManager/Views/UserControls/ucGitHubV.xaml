@@ -141,38 +141,56 @@
             <TabControl Grid.Column="1">
                 <TabItem Header="Owner">
                     <WrapPanel Cursor="">
+                        <Button Margin="5" Content="詳細">
+                            <b:Interaction.Triggers>
+                                <b:EventTrigger EventName="Click">
+                                    <b:CallMethodAction TargetObject="{Binding}" MethodName="SearchUserDetail"/>
+                                </b:EventTrigger>
+                            </b:Interaction.Triggers>
+                        </Button>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Margin="5" VerticalAlignment="Center" Text="Login"/>
-                            <TextBox IsReadOnly="True" Margin="5" VerticalAlignment="Center" Width="200" Text="{Binding BlogManager.SelectedSearchRepository.Owner.Login, Mode=OneWay}"/>
+                            <TextBox IsReadOnly="True" Margin="5" VerticalAlignment="Center" Width="200" Text="{Binding BlogManager.UserDetail.Login, Mode=OneWay}"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Margin="5" VerticalAlignment="Center" Text="Id"/>
-                            <TextBox IsReadOnly="True" Margin="5" VerticalAlignment="Center" Width="200" Text="{Binding BlogManager.SelectedSearchRepository.Owner.Id, Mode=OneWay}"/>
+                            <TextBox IsReadOnly="True" Margin="5" VerticalAlignment="Center" Width="200" Text="{Binding BlogManager.UserDetail.Id, Mode=OneWay}"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Margin="5" VerticalAlignment="Center" Text="NodeId"/>
-                            <TextBox IsReadOnly="True" Margin="5" VerticalAlignment="Center" Width="200" Text="{Binding BlogManager.SelectedSearchRepository.Owner.NodeId, Mode=OneWay}"/>
+                            <TextBox IsReadOnly="True" Margin="5" VerticalAlignment="Center" Width="200" Text="{Binding BlogManager.UserDetail.NodeId, Mode=OneWay}"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Margin="5" VerticalAlignment="Center" Text="AvatarUrl"/>
-                            <TextBox IsReadOnly="True" Margin="5" VerticalAlignment="Center" Width="200" Text="{Binding BlogManager.SelectedSearchRepository.Owner.AvatarUrl, Mode=OneWay}"/>
+                            <TextBox IsReadOnly="True" Margin="5" VerticalAlignment="Center" Width="200" Text="{Binding BlogManager.UserDetail.AvatarUrl, Mode=OneWay}"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Margin="5" VerticalAlignment="Center" Text="Url"/>
-                            <TextBox IsReadOnly="True" Margin="5" VerticalAlignment="Center" Width="200" Text="{Binding BlogManager.SelectedSearchRepository.Owner.Url, Mode=OneWay}"/>
+                            <TextBox IsReadOnly="True" Margin="5" VerticalAlignment="Center" Width="200" Text="{Binding BlogManager.UserDetail.Url, Mode=OneWay}"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Margin="5" VerticalAlignment="Center" Text="HtmlUrl"/>
-                            <TextBox IsReadOnly="True" Margin="5" VerticalAlignment="Center" Width="200" Text="{Binding BlogManager.SelectedSearchRepository.Owner.HtmlUrl, Mode=OneWay}"/>
+                            <TextBox IsReadOnly="True" Margin="5" VerticalAlignment="Center" Width="200" Text="{Binding BlogManager.UserDetail.HtmlUrl, Mode=OneWay}"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Margin="5" VerticalAlignment="Center" Text="Type"/>
-                            <TextBox IsReadOnly="True" Margin="5" VerticalAlignment="Center" Width="200" Text="{Binding BlogManager.SelectedSearchRepository.Owner.Type, Mode=OneWay}"/>
+                            <TextBox IsReadOnly="True" Margin="5" VerticalAlignment="Center" Width="200" Text="{Binding BlogManager.UserDetail.Type, Mode=OneWay}"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Margin="5" VerticalAlignment="Center" Text="SiteAdmin"/>
-                            <TextBox IsReadOnly="True" Margin="5" VerticalAlignment="Center" Width="200" Text="{Binding BlogManager.SelectedSearchRepository.Owner.SiteAdmin, Mode=OneWay}"/>
+                            <TextBox IsReadOnly="True" Margin="5" VerticalAlignment="Center" Width="200" Text="{Binding BlogManager.UserDetail.SiteAdmin, Mode=OneWay}"/>
                         </StackPanel>
+
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Margin="5" VerticalAlignment="Center" Text="Followers"/>
+                            <TextBox IsReadOnly="True" Margin="5" VerticalAlignment="Center" Width="200" Text="{Binding BlogManager.UserDetail.Followers, Mode=OneWay}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Margin="5" VerticalAlignment="Center" Text="Following"/>
+                            <TextBox IsReadOnly="True" Margin="5" VerticalAlignment="Center" Width="200" Text="{Binding BlogManager.UserDetail.Following, Mode=OneWay}"/>
+                        </StackPanel>
+
+
                     </WrapPanel>
                 </TabItem>
                 <TabItem Header="License" DataContext="{Binding BlogManager.SelectedSearchRepository.License}">
@@ -205,6 +223,21 @@
                             <DataGridTextColumn Header="Topics" Binding="{Binding}"/>
                         </DataGrid.Columns>
                     </DataGrid>
+                </TabItem>
+                <TabItem Header="Repository">
+                    <WrapPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Margin="5" VerticalAlignment="Center" Text="Start"/>
+                            <TextBox IsReadOnly="True" Margin="5" VerticalAlignment="Center" Width="200" Text="{Binding BlogManager.RepositoryDetail.StargazersCount, Mode=OneWay}"/>
+                        </StackPanel>
+                        <Button Content="詳細">
+                            <b:Interaction.Triggers>
+                                <b:EventTrigger EventName="Click">
+                                    <b:CallMethodAction TargetObject="{Binding}" MethodName="SearchRepositoryDetail"/>
+                                </b:EventTrigger>
+                            </b:Interaction.Triggers>
+                        </Button>
+                    </WrapPanel>
                 </TabItem>
                 <TabItem Header="投稿記事">
                     <Grid>

@@ -133,14 +133,64 @@ namespace WPManager.Models.GitHub
             {
                 if (_SelectedSearchRepository == null || !_SelectedSearchRepository.Equals(value))
                 {
-                    _SelectedSearchRepository = value;
+                    this.RepositoryDetail = _SelectedSearchRepository = value;
+                    this.UserDetail = _SelectedSearchRepository.Owner ?? new User();
                     RaisePropertyChanged("SelectedSearchRepository");
                 }
             }
         }
         #endregion
 
+        #region リポジトリ検索結果
+        /// <summary>
+        /// リポジトリ検索結果
+        /// 単体で検索した際の結果格納場所
+        /// </summary>
+        Repository _RepositoryDetail = new Repository();
+        /// <summary>
+        /// リポジトリ検索結果
+        /// </summary>
+        public Repository RepositoryDetail
+        {
+            get
+            {
+                return _RepositoryDetail;
+            }
+            set
+            {
+                if (_RepositoryDetail == null || !_RepositoryDetail.Equals(value))
+                {
+                    _RepositoryDetail = value;
+                    RaisePropertyChanged("RepositoryDetail");
+                }
+            }
+        }
+        #endregion
 
+        #region ユーザー情報の詳細
+        /// <summary>
+        /// ユーザー情報の詳細
+        /// </summary>
+        User _UserDetail = new User();
+        /// <summary>
+        /// ユーザー情報の詳細
+        /// </summary>
+        public User UserDetail
+        {
+            get
+            {
+                return _UserDetail;
+            }
+            set
+            {
+                if (_UserDetail == null || !_UserDetail.Equals(value))
+                {
+                    _UserDetail = value;
+                    RaisePropertyChanged("UserDetail");
+                }
+            }
+        }
+        #endregion
 
         #region 指定したページ数まで検索を実行する
         /// <summary>
@@ -287,7 +337,27 @@ namespace WPManager.Models.GitHub
         }
         #endregion
 
-        public async Task<SearchUsersResult> SearchUser(string username)
+        public async void SearchUserSync()
+        {
+            try
+            {
+                var userName = this.SelectedSearchRepository.Owner.Login;
+                this.UserDetail = await SearchUser(userName);
+            }
+            catch
+            {
+
+            }
+        }
+
+
+
+        /// <summary>
+        /// ユーザーの検索処理
+        /// </summary>
+        /// <param name="username">ユーザー名</param>
+        /// <returns>ユーザー検索結果</returns>
+        private async Task<User> SearchUser(string username)
         {
             // GitHub Clientの作成
             var client = new GitHubClient(new ProductHeaderValue(this.GitHubParameter.ProductName));
@@ -295,17 +365,56 @@ namespace WPManager.Models.GitHub
             // トークンの取得
             var tokenAuth = new Credentials(this.GitHubParameter.AccessToken);
             client.Credentials = tokenAuth;
-
-            SearchUsersRequest request = new SearchUsersRequest(username);
-
-
-            // 降順でソート
-            request.Order = SortDirection.Descending;
-
-            var tmp = await client.User.Get(username);
-
-            return await client.Search.SearchUsers(request);
+            return await client.User.Get(username);
         }
+
+        public async void SearchRepositorySync()
+        {
+            try
+            {
+                var ownerName = this.SelectedSearchRepository.Owner.Login;
+                var repositoryName = this.SelectedSearchRepository.Name;
+
+                this.RepositoryDetail = await SearchRepository(ownerName, repositoryName);
+            }
+            catch
+            {
+            }
+        }
+
+        /// <summary>
+        /// リポジトリ情報の取得
+        /// </summary>
+        /// <param name="ownerName">オーナー名</param>
+        /// <param name="repositoryName">リポジトリ名</param>
+        /// <returns>リポジトリ</returns>
+        private async Task<Repository> SearchRepository(string ownerName, string repositoryName)
+        {
+            // GitHub Clientの作成
+            var client = new GitHubClient(new ProductHeaderValue(this.GitHubParameter.ProductName));
+
+            // トークンの取得
+            var tokenAuth = new Credentials(this.GitHubParameter.AccessToken);
+            client.Credentials = tokenAuth;
+            return await client.Repository.Get(ownerName, repositoryName);
+        }
+
+        /// <summary>
+        /// 組織情報の取得
+        /// </summary>
+        /// <param name="orgnaizationName">組織名</param>
+        /// <returns>組織情報</returns>
+        public async Task<Organization> SearchOrgnaization(string orgnaizationName)
+        {
+            // GitHub Clientの作成
+            var client = new GitHubClient(new ProductHeaderValue(this.GitHubParameter.ProductName));
+
+            // トークンの取得
+            var tokenAuth = new Credentials(this.GitHubParameter.AccessToken);
+            client.Credentials = tokenAuth;
+            return await client.Organization.Get(orgnaizationName);
+        }
+
 
 
         #region ブログの記事情報をセットする

@@ -63,6 +63,16 @@ namespace WPManager.ViewModels.UserControls
         }
         #endregion
 
+        public void SearchRepositoryDetail()
+        {
+            this.BlogManager.SearchRepositorySync();
+        }
+
+        public void SearchUserDetail()
+        {
+            this.BlogManager.SearchUserSync();
+        }
+
         #region 言語選択の解除処理
         /// <summary>
         /// 言語選択の解除処理
