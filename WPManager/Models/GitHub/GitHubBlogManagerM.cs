@@ -6,14 +6,18 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
+using System.Reflection.Metadata;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using WordPressPCL.Models;
 using WPManager.Common.Extensions;
 using WPManager.Models.Civitai;
 using WPManager.Models.Civitai.Enums;
 using WPManager.Models.GitHub.Enums;
 using WPManager.Models.Schedule;
+using static System.Net.WebRequestMethods;
 
 namespace WPManager.Models.GitHub
 {
@@ -137,7 +141,13 @@ namespace WPManager.Models.GitHub
         }
         #endregion
 
-
+        #region ブログ要素の記事作成
+        /// <summary>
+        /// ブログ要素の記事作成
+        /// </summary>
+        /// <param name="rank">ランク</param>
+        /// <param name="repos">リポジトリ情報</param>
+        /// <returns>記事</returns>
         private string BlogListItem(int rank, Repository repos)
         {
             StringBuilder sb = new StringBuilder();
@@ -150,67 +160,140 @@ namespace WPManager.Models.GitHub
 
             sb.AppendLine($"<h3 class=\"wp-block-heading is-style-text-subtitle\">{rank}位  {repoName}</h3>");
             sb.AppendLine("<!-- /wp:heading -->");
-            sb.AppendLine("");
-            sb.AppendLine("<!-- wp:paragraph -->");
-            sb.AppendLine($"<p>Star : {repos.StargazersCount}</p>");
-            sb.AppendLine($"<p>Language : {repos.Language}</p>");
-            sb.AppendLine($"<p>Owner : {repos.Owner.Login}</p>");
-            sb.AppendLine($"<p>Description : {repos.Description.EmptyToText("-").CutText(50).Replace("|", "\\/")}</p>");
-            sb.AppendLine("<!-- /wp:paragraph --></div>");
+
+
+            sb.AppendLine("<!-- wp:group {\"layout\":{\"type\":\"flex\",\"flexWrap\":\"wrap\"}} -->");
+            sb.AppendLine("<div class=\"wp-block-group\">");
+
+            foreach (var tmp in repos.Topics)
+            {
+                sb.AppendLine("<!-- wp:paragraph {\"className\":\"is-style-text-annotation\"} -->");
+                sb.AppendLine($"<p class=\"is-style-text-annotation\">{tmp}</p>");
+                sb.AppendLine("<!-- /wp:paragraph -->");
+            }
+            sb.AppendLine("</div>");
             sb.AppendLine("<!-- /wp:group -->");
-            sb.AppendLine("");
-            sb.AppendLine("<!-- wp:group {\"style\":{\"spacing\":{\"blockGap\":\"var:preset|spacing|70\"}},\"layout\":{\"type\":\"flex\",\"flexWrap\":\"wrap\",\"justifyContent\":\"space-between\"}} -->");
-            sb.AppendLine("<div class=\"wp-block-group\">"); 
-            sb.AppendLine("");
+
+
+            StringBuilder list = new StringBuilder();
+            list.AppendLine(ListHtmlLi($"Star : {repos.StargazersCount}"));
+            list.AppendLine(ListHtmlLi($"Language : {repos.Language}"));
+            list.AppendLine(ListHtmlLi($"Owner : {repos.Owner.Login}"));
+            list.AppendLine(ListHtmlLi($"Description : {repos.Description.EmptyToText("-")}"));
+            sb.AppendLine(ListHtmlUL(list.ToString()));
+            sb.AppendLine("</div>");
+
+            string content = ButtonList(repos);
+            content = ButtonGroup(content);
+            sb.AppendLine(content);
+
+            sb.AppendLine("<!-- /wp:group --></div>");
+            sb.AppendLine("<!-- /wp:group -->");
+            return sb.ToString();
+        }
+        #endregion
+
+        #region ボタンの作成処理
+        /// <summary>
+        /// ボタンの作成処理
+        /// </summary>
+        /// <param name="url">URL</param>
+        /// <param name="content">表示文字列</param>
+        /// <returns>ボタンのHTML</returns>
+        private string ButtonArticle(string url, string content)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("<!-- wp:button {\"fontSize\":\"small\"} -->");
+            sb.AppendLine("<div class=\"wp-block-button has-custom-font-size has-small-font-size\">");
+            sb.AppendLine($"<a class=\"wp-block-button__link wp-element-button\" href=\"{url}\">{content}</a>");
+            sb.AppendLine("</div>");
+            sb.AppendLine("<!-- /wp:button -->");
+            return sb.ToString();
+        }
+        #endregion
+
+        #region ボタンリストのHTML作成
+        /// <summary>
+        /// ボタンリストのHTML作成
+        /// </summary>
+        /// <param name="repos"></param>
+        /// <returns></returns>
+        private string ButtonList(Repository repos)
+        {
+            StringBuilder sb = new StringBuilder();
+            #region buttons
             sb.AppendLine("<!-- wp:buttons -->");
             sb.AppendLine("<div class=\"wp-block-buttons\">");
 
             if (!string.IsNullOrEmpty(repos.HtmlUrl))
             {
-                sb.AppendLine("<!-- wp:button {\"fontSize\":\"small\"} -->");
-                sb.AppendLine("<div class=\"wp-block-button has-custom-font-size has-small-font-size\"><a class=\"wp-block-button__link wp-element-button\" " +
-                    $"href=\"{repos.HtmlUrl}\">" +
-                    "GitHub</a></div>");
-                sb.AppendLine("<!-- /wp:button -->");
+                var text = ButtonArticle(repos.HtmlUrl, "Repository");
+                sb.AppendLine(text);
             }
+
             if (!string.IsNullOrEmpty(repos.Owner.HtmlUrl))
             {
-                sb.AppendLine("<!-- wp:button {\"fontSize\":\"small\"} -->");
-                sb.AppendLine("<div class=\"wp-block-button has-custom-font-size has-small-font-size\"><a class=\"wp-block-button__link wp-element-button\" " +
-                    $"href=\"{repos.Owner.HtmlUrl}\">" +
-                    "Owner Page</a></div>");
-                sb.AppendLine("<!-- /wp:button -->");
+                var text = ButtonArticle(repos.Owner.HtmlUrl, "OwnerPage");
+                sb.AppendLine(text);
 
-                sb.AppendLine("<!-- wp:button {\"fontSize\":\"small\"} -->");
-                sb.AppendLine("<div class=\"wp-block-button has-custom-font-size has-small-font-size\"><a class=\"wp-block-button__link wp-element-button\" " +
-                    $"href=\"https://www.google.co.jp/search?q={repos.FullName.Replace("/", "%2F")}\">" +
-                    "Google</a></div>");
-                sb.AppendLine("<!-- /wp:button -->");
+                string googleUrl = $"https://www.google.co.jp/search?q={repos.Name.Replace("/", "%2F")}";
+                text = ButtonArticle(googleUrl, "Google Search");
+                sb.AppendLine(text);
+
             }
 
             if (!string.IsNullOrEmpty(repos.Homepage) && !repos.Homepage.Equals("https://github.com"))
             {
-                sb.AppendLine("<!-- wp:button {\"fontSize\":\"small\"} -->");
-                sb.AppendLine("<div class=\"wp-block-button has-custom-font-size has-small-font-size\"><a class=\"wp-block-button__link wp-element-button\" " +
-                    $"href=\"{repos.Homepage}\">" +
-                    "Homepage</a></div>");
-                sb.AppendLine("<!-- /wp:button -->");
+                var text = ButtonArticle(repos.Homepage, "HomePage");
+                sb.AppendLine(text);
             }
-            if (!string.IsNullOrEmpty(repos.Owner.Blog))
-            {
-                sb.AppendLine("<!-- wp:button {\"fontSize\":\"small\"} -->");
-                sb.AppendLine("<div class=\"wp-block-button has-custom-font-size has-small-font-size\"><a class=\"wp-block-button__link wp-element-button\" " +
-                    $"href=\"{repos.Owner.Blog}\">" +
-                    "Homepage</a></div>");
-                sb.AppendLine("<!-- /wp:button -->");
-            }
-
 
             sb.AppendLine("</div>");
-            sb.AppendLine("<!-- /wp:buttons --></div>");
-            sb.AppendLine("<!-- /wp:group --></div>");
-            sb.AppendLine("<!-- /wp:group -->");
+            sb.AppendLine("<!-- /wp:buttons -->");
+            #endregion
             return sb.ToString();
+        }
+        #endregion
+
+        #region ボタングループのHTM作成
+        /// <summary>
+        /// ボタングループのHTM作成
+        /// </summary>
+        /// <param name="content">コンテンツ</param>
+        /// <returns>HTML</returns>
+        private string ButtonGroup(string content)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendLine("<!-- wp:group {\"style\":{\"spacing\":{\"blockGap\":\"var:preset|spacing|70\"}},\"layout\":{\"type\":\"flex\",\"flexWrap\":\"wrap\",\"justifyContent\":\"space-between\"}} -->");
+            sb.AppendLine("<div class=\"wp-block-group\">");
+            sb.AppendLine($"{content}");
+            sb.AppendLine("</div>");
+            sb.AppendLine("<!-- /wp:group -->");
+
+            return sb.ToString();
+        }
+        #endregion
+
+        private string ListHtmlLi(string content)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("<!-- wp:list-item -->");
+            sb.AppendLine($"<li><p>{content}</p></li>");
+            sb.AppendLine("<!-- /wp:list-item -->");
+            return sb.ToString();
+        }
+
+        private string ListHtmlUL(string content)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("<!-- wp:list -->");
+            sb.AppendLine("<ul class=\"wp-block-list\">");
+            sb.AppendLine($"{content}");
+            sb.AppendLine("</ul>");
+            sb.AppendLine("<!-- /wp:list -->");
+            return sb.ToString();
+
         }
 
         #region 記事作成処理(デザイン性のあるレイアウト)

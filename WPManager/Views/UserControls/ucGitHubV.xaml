@@ -140,7 +140,7 @@
             </GroupBox>
             <TabControl Grid.Column="1">
                 <TabItem Header="Owner">
-                    <WrapPanel>
+                    <WrapPanel Cursor="">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Margin="5" VerticalAlignment="Center" Text="Login"/>
                             <TextBox IsReadOnly="True" Margin="5" VerticalAlignment="Center" Width="200" Text="{Binding BlogManager.SelectedSearchRepository.Owner.Login, Mode=OneWay}"/>
@@ -200,7 +200,7 @@
                     </WrapPanel>
                 </TabItem>
                 <TabItem Header="Topics">
-                    <DataGrid ItemsSource="{Binding BlogManager.SelectedSearchRepository.Topics}">
+                    <DataGrid IsReadOnly="True" ItemsSource="{Binding BlogManager.SelectedSearchRepository.Topics}">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Topics" Binding="{Binding}"/>
                         </DataGrid.Columns>
