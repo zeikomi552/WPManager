@@ -14,6 +14,23 @@ namespace WPManager.Common.Actions
     /// </summary> 
     public class OpenURLAction : TriggerAction<FrameworkElement>
     {
+        public enum SearchEngineEnum
+        {
+            None,
+            Google,
+            Bing
+        }
+
+        public static readonly DependencyProperty SearchEngineProperty =
+        DependencyProperty.Register("SearchEngine", typeof(SearchEngineEnum), typeof(OpenURLAction), new UIPropertyMetadata());
+
+        public SearchEngineEnum SearchEngine
+        {
+            get { return (SearchEngineEnum)GetValue(SearchEngineProperty); }
+            set { SetValue(SearchEngineProperty, value); }
+        }
+
+
         public static readonly DependencyProperty URLProperty =
         DependencyProperty.Register("URL", typeof(string), typeof(OpenURLAction), new UIPropertyMetadata());
 
@@ -27,9 +44,31 @@ namespace WPManager.Common.Actions
         {
             try
             {
-                var startInfo = new System.Diagnostics.ProcessStartInfo(URL);
-                startInfo.UseShellExecute = true;
-                System.Diagnostics.Process.Start(startInfo);
+                switch (SearchEngine)
+                {
+                    case SearchEngineEnum.None:
+                        {
+                            var startInfo = new System.Diagnostics.ProcessStartInfo(URL);
+                            startInfo.UseShellExecute = true;
+                            System.Diagnostics.Process.Start(startInfo);
+                            break;
+                        }
+                    case SearchEngineEnum.Google:
+                        {
+                            var startInfo = new System.Diagnostics.ProcessStartInfo("https://www.google.co.jp/search?q=" + URL);
+                            startInfo.UseShellExecute = true;
+                            System.Diagnostics.Process.Start(startInfo);
+                            break;
+                        }
+                    case SearchEngineEnum.Bing:
+                        {
+                            var startInfo = new System.Diagnostics.ProcessStartInfo("https://www.bing.com/search?pglt=931&q=" + URL);
+                            startInfo.UseShellExecute = true;
+                            System.Diagnostics.Process.Start(startInfo);
+                            break;
+                        }
+                }
+
             }
             catch// (Exception ex)
             {
