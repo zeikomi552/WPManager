@@ -415,29 +415,12 @@ namespace WPManager.Models.GitHub
             return await client.Organization.Get(orgnaizationName);
         }
 
-
-
-        #region ブログの記事情報をセットする
-        /// <summary>
-        /// ブログの記事情報をセットする
-        /// </summary>
-        protected virtual void SetArticleInfo()
-        {
-            this.Article.Title = GetTitle();
-            this.Article.Slug = GetSlug();
-            this.Article.Content = GetArticle();
-            this.Article.Description = GetDescription();
-            this.Article.Excerpt = GetExcerpt();
-            RaisePropertyChanged("Article");
-        }
-        #endregion
-
         #region 記事の作成処理
         /// <summary>
         /// 記事の作成処理
         /// </summary>
         /// <returns>記事</returns>
-        protected virtual string GetArticle()
+        protected override string GetArticle()
         {
             switch (this.ArticleType)
             {
@@ -481,7 +464,7 @@ namespace WPManager.Models.GitHub
         /// スラッグを作成する
         /// </summary>
         /// <returns>スラッグ</returns>
-        protected virtual string GetSlug()
+        protected override string GetSlug()
         {
             return string.Empty;
         }
@@ -492,7 +475,7 @@ namespace WPManager.Models.GitHub
         /// タイトルの作成処理
         /// </summary>
         /// <returns>タイトル</returns>
-        protected virtual string GetTitle()
+        protected override string GetTitle()
         {
             return string.Empty;
 
@@ -504,7 +487,7 @@ namespace WPManager.Models.GitHub
         /// 詳細の作成処理
         /// </summary>
         /// <returns>詳細</returns>
-        protected virtual string GetDescription()
+        protected override string GetDescription()
         {
             return string.Empty;
         }
@@ -515,7 +498,7 @@ namespace WPManager.Models.GitHub
         /// 要約の作成処理
         /// </summary>
         /// <returns>要約</returns>
-        protected virtual string GetExcerpt()
+        protected override string GetExcerpt()
         {
             return string.Empty;
 

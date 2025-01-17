@@ -4,6 +4,7 @@ using Microsoft.Win32;
 using Octokit;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -135,21 +136,17 @@ namespace WPManager.Models.Civitai
         }
         #endregion
 
-        //public void SetScheduleCondition(string title, string slug, )
-        //{
-        //}
-
         #region ブログの記事情報をセットする
         /// <summary>
         /// ブログの記事情報をセットする
         /// </summary>
-        private void SetArticleInfo()
+        protected override void SetArticleInfo()
         {
-            this.Article.Title = GetTitle();
-            this.Article.Slug = GetSlug();
+            this.Article.Title = string.IsNullOrEmpty(this.Article.Title) ? GetTitle() : this.Article.Title;
+            this.Article.Slug = string.IsNullOrEmpty(this.Article.Slug) ? GetSlug() : this.Article.Slug;
             this.Article.Content = GetArticle();
-            this.Article.Description = GetDescription();
-            this.Article.Excerpt = GetExcerpt();
+            this.Article.Description = string.IsNullOrEmpty(this.Article.Description) ? GetDescription() : this.Article.Description;
+            this.Article.Excerpt = string.IsNullOrEmpty(this.Article.Excerpt) ? GetExcerpt() : this.Article.Excerpt;
             RaisePropertyChanged("Article");
         }
         #endregion
@@ -159,7 +156,7 @@ namespace WPManager.Models.Civitai
         /// スラッグを作成する
         /// </summary>
         /// <returns>スラッグ</returns>
-        private string GetSlug()
+        protected override string GetSlug()
         {
             string slug = string.Empty;
 
@@ -217,7 +214,7 @@ namespace WPManager.Models.Civitai
         /// タイトルの作成処理
         /// </summary>
         /// <returns>タイトル</returns>
-        private string GetTitle()
+        protected override string GetTitle()
         {
             string title = string.Empty;
 
@@ -296,7 +293,7 @@ namespace WPManager.Models.Civitai
         /// 記事の作成処理
         /// </summary>
         /// <returns>記事</returns>
-        private string GetArticle()
+        protected override string GetArticle()
         {
             switch (this.ArticleType)
             {
@@ -491,7 +488,6 @@ namespace WPManager.Models.Civitai
         }
         #endregion
 
-
         #region 記事タイプ2の取得(画像ありリスト)
         /// <summary>
         /// 記事タイプ2の取得(画像ありリスト)
@@ -580,7 +576,7 @@ namespace WPManager.Models.Civitai
         /// 説明の取得
         /// </summary>
         /// <returns>説明</returns>
-        public string GetDescription()
+        protected override string GetDescription()
         {
             return GetTitle();
         }
@@ -591,7 +587,7 @@ namespace WPManager.Models.Civitai
         /// 要約の取得
         /// </summary>
         /// <returns>要約</returns>
-        public string GetExcerpt()
+        protected override string GetExcerpt()
         {
             return GetTitle();
         }
@@ -666,6 +662,9 @@ namespace WPManager.Models.Civitai
 
                 // 記事タイプ 1:簡素バージョン 2:豪華バージョン
                 civitai_model.ArticleType = schdule_item.ArticleType == 1 ? CivitaiArticleType.Type1 : CivitaiArticleType.Type2;
+
+                // タイトルのセット
+                civitai_model.Article.Title = schdule_item.Title;
 
                 // 検索の実行
                 bool ret = await civitai_model.SearchSync();

@@ -452,6 +452,9 @@ namespace WPManager.Models.GitHub
                 // 記事タイプ 1:簡素バージョン 2:豪華バージョン
                 item.ArticleType = schdule_item.ArticleType == 1 ? GitHubArticleType.Type1 : GitHubArticleType.Type2;
 
+                // タイトルのセット
+                item.Article.Title = schdule_item.Title;
+
                 // 検索の実行
                 bool ret = await item.SearchSync();
 

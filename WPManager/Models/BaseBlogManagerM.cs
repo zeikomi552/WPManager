@@ -61,6 +61,45 @@ namespace WPManager.Models
         }
         #endregion
 
+        #region ブログの記事情報をセットする
+        /// <summary>
+        /// ブログの記事情報をセットする
+        /// </summary>
+        protected virtual void SetArticleInfo()
+        {
+            this.Article.Title = string.IsNullOrEmpty(this.Article.Title) ? GetTitle() : this.Article.Title;
+            this.Article.Slug = string.IsNullOrEmpty(this.Article.Slug) ? GetSlug() : this.Article.Slug;
+            this.Article.Content = GetArticle();
+            this.Article.Description = string.IsNullOrEmpty(this.Article.Description) ? GetDescription() : this.Article.Description;
+            this.Article.Excerpt = string.IsNullOrEmpty(this.Article.Excerpt) ? GetExcerpt() : this.Article.Excerpt;
+            RaisePropertyChanged("Article");
+        }
+        #endregion
+
+        protected virtual  string GetTitle()
+        {
+            return string.Empty;
+        }
+
+        protected virtual string GetArticle()
+        {
+            return string.Empty;
+        }
+
+        protected virtual string GetSlug()
+        {
+            return string.Empty;
+        }
+
+        protected virtual string GetDescription()
+        {
+            return string.Empty;
+        }
+
+        protected virtual string GetExcerpt()
+        {
+            return string.Empty;
+        }
 
         #region 記事のポスト処理
         /// <summary>
