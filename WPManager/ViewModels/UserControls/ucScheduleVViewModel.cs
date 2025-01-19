@@ -1,9 +1,12 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using WPManager.Common.Utilites;
 using WPManager.Models;
 using WPManager.Models.Civitai;
 using WPManager.Models.Civitai.Enums;
@@ -75,30 +78,7 @@ namespace WPManager.ViewModels.UserControls
 
 
 
-        #region 選択しているスケジュール要素
-        /// <summary>
-        /// 選択しているスケジュール要素
-        /// </summary>
-        ScheduleM? _SelectedScheduleItem = null;
-        /// <summary>
-        /// 選択しているスケジュール要素
-        /// </summary>
-        public ScheduleM? SelectedScheduleItem
-        {
-            get
-            {
-                return _SelectedScheduleItem;
-            }
-            set
-            {
-                if (_SelectedScheduleItem == null || !_SelectedScheduleItem.Equals(value))
-                {
-                    _SelectedScheduleItem = value;
-                    RaisePropertyChanged("SelectedScheduleItem");
-                }
-            }
-        }
-        #endregion
+
 
         #region 投稿処理
         /// <summary>
@@ -142,6 +122,102 @@ namespace WPManager.ViewModels.UserControls
                             }
                     }
                 }
+            }
+        }
+        #endregion
+
+        #region ファイルの保存処理
+        /// <summary>
+        /// ファイルの保存処理
+        /// </summary>
+        public void Save()
+        {
+            try
+            {
+                // ダイアログのインスタンスを生成
+                var dialog = new SaveFileDialog();
+
+                // ファイルの種類を設定
+                dialog.Filter = "テキストファイル (*.wpmconf)|*.wpmconf";
+
+                // ダイアログを表示する
+                if (dialog.ShowDialog() == true)
+                {
+                    XMLUtil.Seialize<ScheduleConfigM>(dialog.FileName, this.ScheduleConf);
+                }
+            }
+            catch
+            {
+
+            }
+        }
+        #endregion
+
+        #region ファイルのロード処理
+        /// <summary>
+        /// ファイルのロード処理
+        /// </summary>
+        public void Load()
+        {
+            try
+            {
+
+                // ダイアログのインスタンスを生成
+                var dialog = new OpenFileDialog();
+
+                // ファイルの種類を設定
+                dialog.Filter = "テキストファイル (*.wpmconf)|*.wpmconf";
+
+                // ダイアログを表示する
+                if (dialog.ShowDialog() == true)
+                {
+                    this.ScheduleConf = XMLUtil.Deserialize<ScheduleConfigM>(dialog.FileName);
+                }
+            }
+            catch
+            {
+
+            }
+        }
+        #endregion
+
+        #region ↑へ移動
+        /// <summary>
+        /// ↑へ移動
+        /// </summary>
+        public void MoveUp()
+        {
+            try
+            {
+                if (this.ScheduleConf.SelectedScheduleItem != null)
+                {
+                    this.ScheduleConf.MoveUP();
+                }
+
+            }
+            catch
+            {
+
+            }
+        }
+        #endregion
+
+        #region ↓へ移動
+        /// <summary>
+        /// ↓へ移動
+        /// </summary>
+        public void MoveDown()
+        {
+            try
+            {
+                if (this.ScheduleConf.SelectedScheduleItem != null)
+                {
+                    this.ScheduleConf.MoveDown();
+                }
+            }
+            catch
+            {
+
             }
         }
         #endregion
