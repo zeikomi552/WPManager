@@ -650,7 +650,7 @@ namespace WPManager.Models.Civitai
                 CivitaiBlogManagerM civitai_model = new CivitaiBlogManagerM();
 
                 // 基本検索条件をセット
-                civitai_model.SearchCondition.Types = ModelTypeEnum.Checkpoint;
+                civitai_model.SearchCondition.Types = schdule_item.ModelType;
                 civitai_model.SearchCondition.Sort = ModelSortEnum.Most_Downloaded;
                 civitai_model.SearchCondition.Period = schdule_item.CivitaiPeriod;
 

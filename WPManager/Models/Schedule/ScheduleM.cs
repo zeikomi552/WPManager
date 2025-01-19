@@ -39,7 +39,6 @@ namespace WPManager.Models.Schedule
         }
         #endregion
 
-
         #region タイトル
         /// <summary>
         /// タイトル
@@ -135,6 +134,31 @@ namespace WPManager.Models.Schedule
                 {
                     _Slug = value;
                     RaisePropertyChanged("Slug");
+                }
+            }
+        }
+        #endregion
+
+        #region モデルタイプ(Civitai限定)
+        /// <summary>
+        /// モデルタイプ(Civitai限定)
+        /// </summary>
+        ModelTypeEnum _ModelType = ModelTypeEnum.Checkpoint;
+        /// <summary>
+        /// モデルタイプ(Civitai限定)
+        /// </summary>
+        public ModelTypeEnum ModelType
+        {
+            get
+            {
+                return _ModelType;
+            }
+            set
+            {
+                if (!_ModelType.Equals(value))
+                {
+                    _ModelType = value;
+                    RaisePropertyChanged("ModelType");
                 }
             }
         }
