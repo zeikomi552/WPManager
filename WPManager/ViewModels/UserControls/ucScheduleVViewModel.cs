@@ -181,6 +181,27 @@ namespace WPManager.ViewModels.UserControls
         }
         #endregion
 
+        #region コピー処理
+        /// <summary>
+        /// コピー処理
+        /// </summary>
+        public void Copy()
+        {
+            try
+            {
+                if (ScheduleConf.SelectedScheduleItem != null)
+                {
+                    var copy = ScheduleConf.SelectedScheduleItem!.ShallowCopy();
+                    this.ScheduleConf.ScheduleItems.Add(copy);
+                }
+            }
+            catch
+            {
+
+            }
+        }
+        #endregion
+
         #region ↑へ移動
         /// <summary>
         /// ↑へ移動

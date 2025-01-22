@@ -314,7 +314,16 @@ namespace WPManager.Models.Schedule
         }
         #endregion
 
-
+        #region シャローコピー
+        /// <summary>
+        /// シャローコピー
+        /// </summary>
+        /// <returns></returns>
+        public ScheduleM ShallowCopy()
+        {
+            return (ScheduleM)MemberwiseClone();
+        }
+        #endregion
 
     }
 }
