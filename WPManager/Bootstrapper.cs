@@ -36,6 +36,7 @@ namespace WPManager
             ViewModelLocationProvider.Register<ucGitHubV, ucGitHubVViewModel>();
             ViewModelLocationProvider.Register<ucCivitaiV, ucCivitaiVViewModel>();
             ViewModelLocationProvider.Register<ucScheduleV, ucScheduleVViewModel>();
+            ViewModelLocationProvider.Register<ucOllamaV, ucOllamaVViewModel>();
         }
 
         protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)

@@ -19,6 +19,7 @@ namespace WPManager.Common
             regionManager.RegisterViewWithRegion("CivitaiRegion", typeof(ucCivitaiV));
             regionManager.RegisterViewWithRegion("CivitaiImageRegion", typeof(ucCivitaiImageV));
             regionManager.RegisterViewWithRegion("ScheduleRegion", typeof(ucScheduleV));
+            regionManager.RegisterViewWithRegion("OllamaRegion", typeof(ucOllamaV));
         }
 
         public void RegisterTypes(IContainerRegistry containerRegistry)

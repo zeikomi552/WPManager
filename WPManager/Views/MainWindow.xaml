@@ -18,6 +18,9 @@
             <TabItem Header="Schedule">
                 <ContentControl Margin="5" prism:RegionManager.RegionName="ScheduleRegion"/>
             </TabItem>
+            <TabItem Header="Ollama">
+                <ContentControl Margin="5" prism:RegionManager.RegionName="OllamaRegion"/>
+            </TabItem>
             <TabItem Header="GitHub">
                 <ContentControl Margin="5" prism:RegionManager.RegionName="GitHubRegion"/>
             </TabItem>

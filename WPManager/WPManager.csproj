@@ -21,4 +21,10 @@
     <PackageReference Include="WordPressPCL" Version="2.1.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="Ollapi">
+      <HintPath>dllls\Ollapi.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
