@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WPManager.Models.Civitai.Models;
+﻿using Cvapi.Models.Civitai.Models;
 
 namespace WPManager.Models
 {

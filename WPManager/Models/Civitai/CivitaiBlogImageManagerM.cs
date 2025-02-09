@@ -1,14 +1,10 @@
-﻿using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Cvapi;
+using Cvapi.Models.Civitai.Enums;
+using Cvapi.Models.Civitai.Images;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using WPManager.Common.Extensions;
 using WPManager.Models.Civitai.Enums;
-using WPManager.Models.Civitai.Images;
-using WPManager.Models.Civitai.Models;
 using WPManager.Models.Schedule;
 
 namespace WPManager.Models.Civitai
@@ -105,7 +101,7 @@ namespace WPManager.Models.Civitai
         /// </summary>
         public async void Search()
         {
-            var client = new CivitaiClient(EndPoint);
+            var client = new CivitaiClient();
             this.SearchResults = await client.ImageSearch(this.SearchCondition.RequestQuery);
             SetArticleInfo();
         }
@@ -119,7 +115,7 @@ namespace WPManager.Models.Civitai
         {
             try
             {
-                var client = new CivitaiClient(EndPoint);
+                var client = new CivitaiClient();
                 this.SearchResults = await client.ImageSearch(this.SearchCondition.RequestQuery);
                 SetArticleInfo();
 

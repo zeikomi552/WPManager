@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:my="clr-namespace:WPManager.Common.Utilites"
-             xmlns:enum="clr-namespace:WPManager.Models.Civitai.Enums"
+             xmlns:enum="clr-namespace:Cvapi.Models.Civitai.Enums;assembly=Cvapi"
+             xmlns:enum2="clr-namespace:WPManager.Models.Civitai.Enums"
              xmlns:cenum="clr-namespace:WPManager.Models.WordPress"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WPManager.Views.UserControls"
@@ -47,7 +48,7 @@
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                         <TextBlock Width="auto" TextAlignment="Right" VerticalAlignment="Center" Margin="5" Text="ArticleType"/>
                         <TextBlock VerticalAlignment="Center" Margin="5" Text=":"/>
-                        <ComboBox Margin="5" Width="80" ItemsSource="{Binding Mode=OneWay, Source={my:Enumeration {x:Type enum:CivitaiArticleType}}}"
+                        <ComboBox Margin="5" Width="80" ItemsSource="{Binding Mode=OneWay, Source={my:Enumeration {x:Type enum2:CivitaiArticleType}}}"
                                               SelectedValue="{Binding BlogManager.ArticleType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                                               DisplayMemberPath="Description" SelectedValuePath="Value"  />
                     </StackPanel>

@@ -1,14 +1,8 @@
 ﻿using Markdig;
 using Octokit;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using WPManager.Common.Extensions;
-using WPManager.Models.Civitai.Enums;
 using WPManager.Models.GitHub.Enums;
 using WPManager.Models.Schedule;
 

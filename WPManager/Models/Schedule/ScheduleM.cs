@@ -1,4 +1,5 @@
-﻿using Octokit;
+﻿using Cvapi.Models.Civitai.Enums;
+using Octokit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
