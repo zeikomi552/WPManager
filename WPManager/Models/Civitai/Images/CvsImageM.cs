@@ -23,32 +23,6 @@ namespace WPManager.Models.Civitai.Images
             {
             }
 
-            #region ブックマーク[IsBookmark]プロパティ
-            /// <summary>
-            /// ブックマーク[IsBookmark]プロパティ用変数
-            /// </summary>
-            bool _IsBookmark = false;
-            /// <summary>
-            /// ブックマーク[IsBookmark]プロパティ
-            /// </summary>
-            [JsonPropertyName("IsBookmark")]
-            public bool IsBookmark
-            {
-                get
-                {
-                    return _IsBookmark;
-                }
-                set
-                {
-                    if (!_IsBookmark.Equals(value))
-                    {
-                        _IsBookmark = value;
-                        RaisePropertyChanged("IsBookmark");
-                    }
-                }
-            }
-            #endregion
-
             #region Stats
             /// <summary>
             /// Stats

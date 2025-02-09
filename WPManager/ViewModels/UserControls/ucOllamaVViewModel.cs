@@ -1,4 +1,5 @@
 ﻿using Ollapi.api;
+using Ollapi.Interface;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -43,11 +44,11 @@ namespace WPManager.ViewModels.UserControls
         /// <summary>
         /// メッセージ履歴
         /// </summary>
-        ObservableCollection<OllapiMessage> _MessageHistory = new ObservableCollection<OllapiMessage>();
+        ObservableCollection<IOllapiMessage> _MessageHistory = new ObservableCollection<IOllapiMessage>();
         /// <summary>
         /// メッセージ履歴
         /// </summary>
-        public ObservableCollection<OllapiMessage> MessageHistory
+        public ObservableCollection<IOllapiMessage> MessageHistory
         {
             get
             {
