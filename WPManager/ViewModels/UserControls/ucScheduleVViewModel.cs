@@ -86,43 +86,53 @@ namespace WPManager.ViewModels.UserControls
         /// </summary>
         public void Post()
         {
-            foreach (var item in this.ScheduleConf.ScheduleItems)
+            try
             {
-                if (item.Selected == true)
+                foreach (var item in this.ScheduleConf.ScheduleItems)
                 {
-                    switch (item.SourceType)
+                    if (item.Selected == true)
                     {
-                        case Models.WordPress.SourceTypeEnum.CivitaiModel:
-                            {
-                                CivitaiBlogManagerM civitai_model = new CivitaiBlogManagerM();
-                                civitai_model.SearchAndPost(item, this.Config!.WPConfig!);
-                                break;
-                            }
-                        case Models.WordPress.SourceTypeEnum.CivitaiImage:
-                            {
-                                CivitaiBlogImageManagerM civitai_model = new CivitaiBlogImageManagerM();
-                                civitai_model.SearchAndPost(item, this.Config!.WPConfig!);
-                                break;
-                            }
-                        case Models.WordPress.SourceTypeEnum.GitHubLanguage:
-                            {
-                                GitHubBolgLanguageManagerM model = new GitHubBolgLanguageManagerM();
-                                model.SearchAndPost(item, this.Config!);
-                                break;
-                            }
-                        case Models.WordPress.SourceTypeEnum.GitHubRepository:
-                            {
-                                GitHubBlogManagerM model = new GitHubBlogManagerM();
-                                model.SearchAndPost(item, this.Config!);
-                                break;
-                            }
-                        default:
-                            {
-                                break;
-                            }
+                        switch (item.SourceType)
+                        {
+                            case Models.WordPress.SourceTypeEnum.CivitaiModel:
+                                {
+                                    CivitaiBlogManagerM civitai_model = new CivitaiBlogManagerM();
+                                    civitai_model.SearchAndPost(item, this.Config!.WPConfig!);
+                                    break;
+                                }
+                            case Models.WordPress.SourceTypeEnum.CivitaiImage:
+                                {
+                                    CivitaiBlogImageManagerM civitai_model = new CivitaiBlogImageManagerM();
+                                    civitai_model.SearchAndPost(item, this.Config!.WPConfig!);
+                                    break;
+                                }
+                            case Models.WordPress.SourceTypeEnum.GitHubLanguage:
+                                {
+                                    GitHubBolgLanguageManagerM model = new GitHubBolgLanguageManagerM();
+                                    model.SearchAndPost(item, this.Config!);
+                                    break;
+                                }
+                            case Models.WordPress.SourceTypeEnum.GitHubRepository:
+                                {
+                                    GitHubBlogManagerM model = new GitHubBlogManagerM();
+                                    model.SearchAndPost(item, this.Config!);
+                                    break;
+                                }
+                            default:
+                                {
+                                    break;
+                                }
+                        }
                     }
                 }
             }
+            catch
+            {
+
+            }
+            
+        
+        
         }
         #endregion
 
